@@ -4,4 +4,19 @@
 
 *.suo
 /.vs/*
+# Diretórios de saída de compilação
+**/bin/
+**/obj/
+
+# Arquivos específicos gerados pela compilação
+*.pdb
+*.cache
+
+# Ignorar arquivos gerados automaticamente durante o build
+*.AssemblyInfo.cs
+*.AssemblyInfoInputs.cache
+*.AssemblyReference.cache
+
+# Exceções específicas (remova ou ajuste conforme necessário)
+!**/Exceptions/*.cs # Não ignorar arquivos de exceção manualmente criados
 
