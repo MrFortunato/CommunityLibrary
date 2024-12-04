@@ -5,8 +5,15 @@ namespace CommunityLibrary.Domain
     public class BookCategory : Entity
     {
         public string Description { get; set; } = string.Empty;
-
-        internal BookCategory(Guid id,string name ,string description)
+        public Guid RegisteredUserId { get; set; }  
+        public User RegisteredUser { get; set; }
+        public ICollection<Book> Books { get; set; }
+        public BookCategory()
+        {
+            RegisteredUser = new();
+            Books = [];
+        }
+        internal BookCategory(Guid id,string name ,string description): this()  
         {
             ValidateName(name);
             ValidateDescription(description);

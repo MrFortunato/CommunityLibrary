@@ -7,9 +7,25 @@ namespace CommunityLibrary.Domain
         public string Email { get; private set ; } = string.Empty;
         public string Password { get; private set; } = string.Empty;
         public string ConfirmedPassword { get; private set; } = string.Empty;
+        public Client Client { get; set; }
+        public ICollection<BookRental> BookRentals { get; set; }
+        public ICollection<Book> RegisteredBooks { get; set; }
+        public ICollection<BookCategory> RegisteredBookCategories { get; set; }
+        public ICollection<Client> RegisteredClients { get; set; }
 
-        internal User( string email, string password,string name)
+        public ICollection<Author> RegisteredAuthors { get; set; }
+        public User()
         {
+            Client client = new();
+            RegisteredBookCategories = [];
+            BookRentals = [];
+            RegisteredBooks = [];
+            RegisteredClients = [];
+            RegisteredAuthors = [];
+        }
+        internal User( string email, string password,string name):this() 
+        {
+  
             ValidateEmail(email);
             ValidatePassword(password, ConfirmedPassword);
             Id = Guid.NewGuid();

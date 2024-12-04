@@ -1,4 +1,6 @@
-﻿namespace CommunityLibrary.Domain
+﻿using CommunityLibrary.Domain;
+
+namespace CommunityLibrary
 {
     public abstract class Entity:BaseEntity
     {
