@@ -13,7 +13,7 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
 
             builder.Property(x => x.Id)
                 .HasColumnType("BINARY(16)")
-                .HasDefaultValueSql("UUID_TO_BIN(UUID())")
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.Name)
@@ -27,7 +27,7 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
 
             builder.Property(x => x.RegisteredByUserId)
                 .HasColumnType("BINARY(16)")
-                .HasDefaultValueSql("UUID_TO_BIN(UUID())")
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.Status)

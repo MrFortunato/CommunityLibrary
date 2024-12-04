@@ -8,7 +8,7 @@ namespace CommunityLibrary.Domain
        public Guid AuthorId { get; private set; }
        public required Author Author { get; set; }
        public Guid BookCategoryId { get; private set; }
-        public required BookCategory BookCategory { get; set; }
+       public required BookCategory BookCategory { get; set; }
        public string Description { get; private set; } = string.Empty;
 
        public Guid RegisteredByUserId { get; private set; }

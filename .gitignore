@@ -33,3 +33,6 @@
 **/obj/*.g.props
 **/obj/*.g.targets
 **/obj/*.dgspec.json
+/CommunityLibrary.Api/CommunityLibrary.Api.csproj.user
+/CommunityLibrary.Api/appsettings.json
+*.cs

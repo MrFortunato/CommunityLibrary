@@ -14,22 +14,22 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
 
             builder.Property(x => x.Id)
                 .HasColumnType("BINARY(16)")
-                .HasDefaultValueSql("UUID_TO_BIN(UUID())")
+               .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.BookId)
             .HasColumnType("BINARY(16)")
-            .HasDefaultValueSql("UUID_TO_BIN(UUID())")
+            .ValueGeneratedOnAdd()
             .IsRequired();
 
             builder.Property(x => x.UserId)
                 .HasColumnType("BINARY(16)")
-                .HasDefaultValueSql("UUID_TO_BIN(UUID())")
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.ClientId)
                 .HasColumnType("BINARY(16)")
-                .HasDefaultValueSql("UUID_TO_BIN(UUID())")
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
             builder.Property(x => x.RentalDate)
