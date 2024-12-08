@@ -16,25 +16,15 @@ namespace CommunityLibrary.Domain
         public ICollection<Author> RegisteredAuthors { get; set; }
         public User()
         {
-            Client client = new();
+            Id = Guid.NewGuid(); 
+            LastModifiedDate = null;
             RegisteredBookCategories = [];
             BookRentals = [];
             RegisteredBooks = [];
             RegisteredClients = [];
             RegisteredAuthors = [];
         }
-        internal User( string email, string password,string name):this() 
-        {
-  
-            ValidateEmail(email);
-            ValidatePassword(password, ConfirmedPassword);
-            Id = Guid.NewGuid();
-            Email = email;
-            Password = password;
-            Name = name;
-            CreatedDate = DateTime.Now;
-            Status = true;
-        }
+        
         public void Create(string email, string password, string confirmedPassword, string name)
         {
             ValidateEmail(email);

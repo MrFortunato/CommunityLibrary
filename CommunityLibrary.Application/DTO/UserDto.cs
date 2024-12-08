@@ -17,9 +17,9 @@ namespace CommunityLibrary.Application.DTO
 
         [Required(ErrorMessage = "The confirmed password is required.")]
         [StringLength(10, MinimumLength = 6, ErrorMessage = "The confirmed password must be between 6 and 10 characters.")]
-        public string ConfirmedPassword { get; private set; } = string.Empty;
+        public string ConfirmedPassword { get; set; } = string.Empty;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public DateTime? LastModifiedDate { get; set; }
-        public bool Status { get; set; } = true;    
+        public DateTime? LastModifiedDate { get; set; } = null;
+        public bool Status { get; set; } = true;
     }
 }

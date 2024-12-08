@@ -54,6 +54,8 @@ namespace CommunityLibrary.Application.Services
 
         public async Task<UserDto> InsertAsync(UserDto entity)
         {
+            entity.Id = Guid.NewGuid(); ;
+            entity.LastModifiedDate = null;
             var domainEntity = _mapper.Map<User>(entity);
 
             var result = await _repository.InsertAsync(domainEntity);
