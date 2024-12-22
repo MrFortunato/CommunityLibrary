@@ -38,6 +38,10 @@ namespace CommunityLibrary.Api.Controllers
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid ID");
+            }
             var user = await _userService.GetByIdAsync(id);
             return Ok(user); 
         }
@@ -54,16 +58,24 @@ namespace CommunityLibrary.Api.Controllers
         [HttpPut("Update")]
         public async Task<IActionResult> Put([FromBody] UserDto userDto)
         {
+            if (userDto == null)
+            {
+                return BadRequest("Invalid user");
+            }
             await _userService.UpdateAsync(userDto);
-            return Ok(new { Message = "User created successfully.", User = userDto });
+            return Ok(new { Message = "User edited successfully.", User = userDto });
         }
 
         // DELETE api/<UserController>/5
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest("Invalid ID");
+            }
             var deletedUser = await _userService.DeleteAsync(id);
-            return Ok(new { Message = "User deleted successfully.", User = deletedUser });
+            return Ok(new { Message = "User deleted successfully."});
         }
     }
 }

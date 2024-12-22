@@ -18,16 +18,18 @@ namespace CommunityLibrary.Application.Services
         public async Task<BookCategoryDto> InsertAsync(BookCategoryDto entity)
         {
             if (entity == null)
-                throw new ArgumentNullException(nameof(entity), "The entity cannot be null.");
+                throw new ArgumentNullException(nameof(entity), "The category cannot be null.");
 
+            entity.Id = Guid.NewGuid();
+            entity.LastModifiedDate = null;
             var bookCategory = _mapper.Map<BookCategory>(entity);
-            var addedEntity = await _repository.UpdateAsync(bookCategory);
+            var addedEntity = await _repository.InsertAsync(bookCategory);
             return _mapper.Map<BookCategoryDto>(addedEntity);
         }
         public async Task<BookCategoryDto> UpdateAsync(BookCategoryDto entity)
         {
             if (entity == null)
-                throw new ArgumentNullException(nameof(entity), "The entity cannot be null.");
+                throw new ArgumentNullException(nameof(entity), "The category cannot be null.");
 
             var bookCategory = _mapper.Map<BookCategory>(entity);
             var addedEntity = await _repository.UpdateAsync(bookCategory);

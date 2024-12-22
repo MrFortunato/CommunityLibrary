@@ -38,6 +38,7 @@ namespace CommunityLibrary.Infra.Ioc
 
             //services.AddScoped(typeof(IGenerecService<BookCategoryDto>),typeof(BookCategoryService));
             services.AddScoped(typeof(IGenerecService<UserDto>), typeof(UserService));
+            services.AddScoped(typeof(IGenerecService<BookCategoryDto>), typeof(BookCategoryService));
 
             services.AddAutoMapper(typeof(MappingProfile));
             return services;

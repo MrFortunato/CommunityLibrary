@@ -17,5 +17,7 @@ namespace CommunityLibrary.Application.DTO
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         public DateTime? LastModifiedDate { get; set; }
+        [Required(ErrorMessage = "The User ID required.")]
+        public Guid RegisteredUserId { get; set; }
     }
 }
