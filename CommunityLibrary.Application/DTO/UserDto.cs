@@ -11,6 +11,10 @@ namespace CommunityLibrary.Application.DTO
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "The name is required.")]
+        [StringLength(50, ErrorMessage = "The name cannot exceed 50 characters.")]
+        public string Name { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "The password is required.")]
         [StringLength(10, MinimumLength = 6, ErrorMessage = "The password must be between 6 and 10 characters.")]
         public string Password { get; set; } = string.Empty;

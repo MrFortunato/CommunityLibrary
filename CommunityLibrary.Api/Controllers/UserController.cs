@@ -27,7 +27,9 @@ namespace CommunityLibrary.Api.Controllers
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
-                predicate = user => user.Email.Contains(filter) || user.Id.Equals(filter);
+                predicate = user =>
+                  user.Name.Contains(filter) ||
+                  user.Id.ToString() == filter; // Converte Id para string
             }
 
             var users = await _userService.GetAllAsync(predicate, pageNumber, pageSize, cancellationToken);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.DTO;
 using CommunityLibrary.Domain;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.MappingSetup
 {
@@ -14,6 +15,7 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateMap<BookDto, Book>().ReverseMap();
             CreateMap<ClientDto, Client>().ReverseMap();
             CreateMap<BookRentalDto, BookRental>().ReverseMap();
+ 
         }
     }
 }

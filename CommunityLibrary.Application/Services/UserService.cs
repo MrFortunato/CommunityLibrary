@@ -35,8 +35,10 @@ namespace CommunityLibrary.Application.Services
             int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
+            // Converte o predicado usando AutoMapper
             var domainPredicate = _mapper.Map<Expression<Func<User, bool>>>(predicate);
 
+            // Recupera os usuários do repositório
             var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
             return entities.Select(e => _mapper.Map<UserDto>(e));
         }

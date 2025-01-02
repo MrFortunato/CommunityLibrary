@@ -1,7 +1,6 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Linq;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
