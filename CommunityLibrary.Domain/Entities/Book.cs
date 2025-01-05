@@ -10,7 +10,6 @@ namespace CommunityLibrary.Domain
        public Guid BookCategoryId { get; private set; }
        public required BookCategory BookCategory { get; set; }
        public string Description { get; private set; } = string.Empty;
-
        public Guid RegisteredByUserId { get; private set; }
        public User RegisteredUser { get; set; }
         public DateTime PublishedDate { get; private set; }

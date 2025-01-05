@@ -21,28 +21,35 @@ namespace CommunityLibrary.Infra.Data.Repositories
         }
 
         public async Task<IEnumerable<BookRental>> GetAllAsync(
-          Expression<Func<BookRental, bool>>? predicate = null,
+          Func<BookRental, bool>? predicate = null,
           int pageNumber = 1,
           int pageSize = 10,
           CancellationToken cancellationToken = default)
         {
-            IQueryable<BookRental> query = _context.BookRentals
-                .Include(br => br.Book)
-                .Include(br => br.Client)
-                .Include(br => br.User)
-                .AsNoTracking().AsNoTracking();
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
+            if (pageNumber <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than 0.");
+            if (pageSize <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than 0.");
 
-            query = query
-                .OrderBy(u => u.Id)
+            // Obtém todos os dados sem rastreamento.
+            var allData = await _context.BookRentals
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+
+            // Aplica o filtro, se fornecido.
+            var filteredData = predicate != null
+                ? allData.Where(predicate)
+                : allData;
+
+            // Pagina os dados filtrados.
+            var paginatedData = filteredData
+                .OrderBy(x => x.Id) // Ordena por um campo específico (exemplo: `Id`).
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
-            return await query.ToListAsync(cancellationToken);
+            return paginatedData;
         }
+
 
         public async Task<BookRental> GetByIdAsync(Guid id)
         {

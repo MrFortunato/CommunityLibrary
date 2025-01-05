@@ -23,6 +23,7 @@ namespace CommunityLibrary.Domain
             RegisteredBooks = [];
             RegisteredClients = [];
             RegisteredAuthors = [];
+            //Client = new();
         }
         
         public void Create(string email, string password, string confirmedPassword, string name)

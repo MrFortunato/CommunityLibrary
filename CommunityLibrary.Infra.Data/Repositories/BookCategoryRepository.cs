@@ -1,6 +1,5 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace CommunityLibrary.Infra.Data
 {
@@ -21,25 +20,34 @@ namespace CommunityLibrary.Infra.Data
         }
 
         public async Task<IEnumerable<BookCategory>> GetAllAsync(
-            Expression<Func<BookCategory, bool>>? predicate = null,
+            Func<BookCategory, bool> predicate,
             int pageNumber = 1,
             int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            IQueryable<BookCategory> query = _context.BookCategories.AsNoTracking();
-            if (predicate != null)
+  
+            if (predicate == null)
             {
-                query = query.Where(predicate);
+                throw new ArgumentNullException(nameof(predicate), "A filtering condition is required.");
             }
 
+            // Obtém todos os dados sem rastreamento.
+            var allData = await _context.BookCategories
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
-            query = query
+   
+            var filteredData = allData.Where(predicate);
+
+  
+            var paginatedData = filteredData
                 .OrderBy(u => u.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
-            return await query.ToListAsync(cancellationToken);
+            return paginatedData;
         }
+
 
         public async Task<BookCategory> GetByIdAsync(Guid id)
         {

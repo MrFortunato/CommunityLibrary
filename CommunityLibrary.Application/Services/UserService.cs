@@ -2,7 +2,6 @@
 using CommunityLibrary.Application.DTO;
 using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Domain;
-using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
 {
@@ -30,15 +29,20 @@ namespace CommunityLibrary.Application.Services
         }
 
         public async Task<IEnumerable<UserDto>> GetAllAsync(
-            Expression<Func<UserDto, bool>>? predicate = null,
+            Func<UserDto, bool>? predicate = null,
             int pageNumber = 1,
             int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            // Converte o predicado usando AutoMapper
-            var domainPredicate = _mapper.Map<Expression<Func<User, bool>>>(predicate);
+            bool domainPredicate(User user)
+            {
+                if (predicate == null)
+                {
+                    return true;
+                }
+                return predicate(_mapper.Map<UserDto>(user));
+            }
 
-            // Recupera os usuários do repositório
             var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
             return entities.Select(e => _mapper.Map<UserDto>(e));
         }
@@ -56,7 +60,7 @@ namespace CommunityLibrary.Application.Services
 
         public async Task<UserDto> InsertAsync(UserDto entity)
         {
-            entity.Id = Guid.NewGuid(); ;
+            entity.Id = Guid.NewGuid(); 
             entity.LastModifiedDate = null;
             var domainEntity = _mapper.Map<User>(entity);
 
@@ -72,10 +76,9 @@ namespace CommunityLibrary.Application.Services
             {
                 throw new KeyNotFoundException($"User with ID {entity.Id} not found.");
             }
-
-            _mapper.Map(entity, domainEntity);
-            var updatedEntity = await _repository.UpdateAsync(domainEntity);
-
+            entity.LastModifiedDate = DateTime.UtcNow;
+            var user = _mapper.Map<User>(entity);
+            var updatedEntity = await _repository.UpdateAsync(user);
             return _mapper.Map<UserDto>(updatedEntity);
         }
     }

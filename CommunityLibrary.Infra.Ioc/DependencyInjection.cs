@@ -35,8 +35,11 @@ namespace CommunityLibrary.Infra.Ioc
             services.AddScoped(typeof(IGenericRepository<User>), typeof(UserRepository));
             services.AddScoped(typeof(IGenericRepository<Client>), typeof(ClientRepository));
             services.AddScoped(typeof(IGenericRepository<BookRental>), typeof(BookRentalRepository));
+            services.AddScoped(typeof(IGenericRepository<Author>), typeof(AuthorRepository));
 
-            //services.AddScoped(typeof(IGenerecService<BookCategoryDto>),typeof(BookCategoryService));
+            services.AddScoped(typeof(IGenerecService<BookDto>), typeof(BookService));
+            services.AddScoped(typeof(IGenerecService<AuthorDto>), typeof(AuthorService));
+            services.AddScoped(typeof(IGenerecService<ClientDto>), typeof(ClientService));
             services.AddScoped(typeof(IGenerecService<UserDto>), typeof(UserService));
             services.AddScoped(typeof(IGenerecService<BookCategoryDto>), typeof(BookCategoryService));
 

@@ -1,6 +1,5 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using System.Linq;
 
 namespace CommunityLibrary.Infra.Data.Repositories
@@ -21,24 +20,22 @@ namespace CommunityLibrary.Infra.Data.Repositories
         }
 
         public async Task<IEnumerable<Client>> GetAllAsync(
-             Expression<Func<Client, bool>>? predicate = null,
+             Func<Client, bool>? predicate = null,
              int pageNumber = 1,
              int pageSize = 10,
              CancellationToken cancellationToken = default)
         {
-            IQueryable<Client> query = _context.Clients.AsNoTracking();
+            var clients = await _context.Clients.AsNoTracking().ToListAsync(cancellationToken);
+
             if (predicate != null)
             {
-                query = query.Where(predicate);
+                clients = clients.Where(predicate).ToList();
             }
-
-
-            query = query
+            return clients
                 .OrderBy(u => u.Id)
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
-
-            return await query.ToListAsync(cancellationToken);
+                .Take(pageSize)
+                .ToList();
         }
         public async Task<Client> GetByIdAsync(Guid id)
         {

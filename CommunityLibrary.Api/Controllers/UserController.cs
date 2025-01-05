@@ -1,7 +1,6 @@
 ﻿using CommunityLibrary.Application.DTO;
 using CommunityLibrary.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 
 namespace CommunityLibrary.Api.Controllers
@@ -23,13 +22,13 @@ namespace CommunityLibrary.Api.Controllers
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            Expression<Func<UserDto, bool>>? predicate = null;
+            Func<UserDto, bool>? predicate = null;
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 predicate = user =>
                   user.Name.Contains(filter) ||
-                  user.Id.ToString() == filter; // Converte Id para string
+                  user.Id.ToString().Equals(filter); // Converte Id para string
             }
 
             var users = await _userService.GetAllAsync(predicate, pageNumber, pageSize, cancellationToken);
@@ -52,6 +51,10 @@ namespace CommunityLibrary.Api.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
+            if (userDto == null)
+            {
+                return BadRequest("Invalid user");
+            }
             await _userService.InsertAsync(userDto);
             return Ok(new { Message = "User created successfully.", User = userDto });
         }

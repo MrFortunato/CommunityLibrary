@@ -2,7 +2,6 @@
 using CommunityLibrary.Application.DTO;
 using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Domain;
-using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
 {
@@ -30,7 +29,7 @@ namespace CommunityLibrary.Application.Services
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity), "The category cannot be null.");
-
+            entity.LastModifiedDate = DateTime.UtcNow;
             var bookCategory = _mapper.Map<BookCategory>(entity);
             var addedEntity = await _repository.UpdateAsync(bookCategory);
             return _mapper.Map<BookCategoryDto>(addedEntity);
@@ -46,25 +45,35 @@ namespace CommunityLibrary.Application.Services
             {
                 throw new KeyNotFoundException($"No category found with ID: {id}");
             }
-
-            var bookCategory = _mapper.Map<BookCategory>(selectedBook);
-            var addedEntity = await _repository.DeleteAsync(bookCategory);
+            var addedEntity = await _repository.DeleteAsync(selectedBook);
             return _mapper.Map<BookCategoryDto>(addedEntity);
         }
 
         public async Task<IEnumerable<BookCategoryDto>> GetAllAsync(
-          Expression<Func<BookCategoryDto, bool>>? predicate = null,
+            Func<BookCategoryDto, bool>? predicate = null,
             int pageNumber = 1,
             int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            var domainPredicate = _mapper.Map<Expression<Func<BookCategory, bool>>>(predicate);
+            if (pageNumber <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than 0.");
+            if (pageSize <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than 0.");
 
+            bool domainPredicate(BookCategory bookCategory)
+            {
+                if(predicate == null)
+                {
+                    return true;
+                }
+                return predicate(_mapper.Map<BookCategoryDto>(bookCategory));
+            }
+            // Fetch paginated entities from the repository
             var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
-            return entities.Select(e => _mapper.Map<BookCategoryDto>(e));
+            return entities.Select(e => _mapper.Map<BookCategoryDto>(e)); 
         }
 
-       
+
         public async Task<BookCategoryDto> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)

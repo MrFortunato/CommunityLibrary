@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CommunityLibrary.Application.DTO
 {
-    public class BookDto
+    public class BookDto    
     {
         public Guid Id { get; set; }
 

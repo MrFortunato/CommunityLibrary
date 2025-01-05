@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace CommunityLibrary.Application.Interfaces
+﻿namespace CommunityLibrary.Application.Interfaces
 {
     public interface IGenerecService<T> where T : class
     {
@@ -8,6 +6,6 @@ namespace CommunityLibrary.Application.Interfaces
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(Guid id);
         Task<T> GetByIdAsync(Guid id);
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
+        Task<IEnumerable<T>> GetAllAsync(Func<T, bool>? predicate = null, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
     }
 }
