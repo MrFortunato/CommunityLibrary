@@ -1,5 +1,6 @@
 ﻿using CommunityLibrary.Application.DTO;
 using CommunityLibrary.Application.Interfaces;
+using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -11,18 +12,18 @@ namespace CommunityLibrary.Api.Controllers
     
     public class UserController : ControllerBase
     {
-        private readonly IGenerecService<UserDto> _userService;
-        public UserController(IGenerecService<UserDto> userRepository)
+        private readonly IUserService _userService;
+        public UserController(IUserService userRepository)
         {
             _userService = userRepository;
         }
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<UserDto>> GetAll([FromQuery] string? filter = null,
+        public async Task<IEnumerable<UserDetailsRequest>> GetAll([FromQuery] string? filter = null,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            Func<UserDto, bool>? predicate = null;
+            Func<UserDetailsRequest, bool>? predicate = null;
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
@@ -49,26 +50,26 @@ namespace CommunityLibrary.Api.Controllers
 
         // POST api/<UserController>
         [HttpPost("Create")]
-        public async Task<IActionResult> Post([FromBody] UserDto userDto)
+        public async Task<IActionResult> Post([FromBody] UserCreateRequest request)
         {
-            if (userDto == null)
+            if (request == null)
             {
                 return BadRequest("Invalid user");
             }
-            await _userService.InsertAsync(userDto);
-            return Ok(new { Message = "User created successfully.", User = userDto });
+            await _userService.InsertAsync(request);
+            return Ok(new { Message = "User created successfully.", User = request });
         }
 
         // PUT api/<UserController>/5
         [HttpPut("Update")]
-        public async Task<IActionResult> Put([FromBody] UserDto userDto)
+        public async Task<IActionResult> Put([FromBody] UserUpdateRequest request)
         {
-            if (userDto == null)
+            if (request == null)
             {
                 return BadRequest("Invalid user");
             }
-            await _userService.UpdateAsync(userDto);
-            return Ok(new { Message = "User edited successfully.", User = userDto });
+            await _userService.UpdateAsync(request);
+            return Ok(new { Message = "User edited successfully.", User = request });
         }
 
         // DELETE api/<UserController>/5

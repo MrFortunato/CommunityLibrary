@@ -1,7 +1,5 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -27,7 +25,10 @@ namespace CommunityLibrary.Infra.Data.Repositories
            int pageSize = 10,
            CancellationToken cancellationToken = default)
         {
-            var books = await _context.Books.AsNoTracking().ToListAsync(cancellationToken);
+            var books = await _context.Books
+                .Include(a => a.Author)
+                .Include(c => c.BookCategory)
+                .AsNoTracking().ToListAsync(cancellationToken);
 
             if (predicate != null)
             {
