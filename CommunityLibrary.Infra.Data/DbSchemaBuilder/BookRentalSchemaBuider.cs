@@ -11,7 +11,6 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
             //Table properties
 
             builder.HasKey(x => x.Id);
-
             builder.Property(x => x.Id)
                 .HasColumnType("BINARY(16)")
                .ValueGeneratedOnAdd()

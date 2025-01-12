@@ -1,4 +1,5 @@
 ﻿using CommunityLibrary.Domain.Exceptions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CommunityLibrary.Domain
 {
@@ -6,26 +7,13 @@ namespace CommunityLibrary.Domain
     {
         public string Email { get; private set ; } = string.Empty;
         public string Password { get; private set; } = string.Empty;
-        public string ConfirmedPassword { get; private set; } = string.Empty;
-        public Client Client { get; set; }
-        public ICollection<BookRental> BookRentals { get; set; }
-        public ICollection<Book> RegisteredBooks { get; set; }
-        public ICollection<BookCategory> RegisteredBookCategories { get; set; }
-        public ICollection<Client> RegisteredClients { get; set; }
 
-        public ICollection<Author> RegisteredAuthors { get; set; }
-        public User()
-        {
-            Id = Guid.NewGuid(); 
-            LastModifiedDate = null;
-            RegisteredBookCategories = [];
-            BookRentals = [];
-            RegisteredBooks = [];
-            RegisteredClients = [];
-            RegisteredAuthors = [];
-            //Client = new();
-        }
-        
+        public ICollection<BookRental> BookRentals { get; set; } = [];
+        public ICollection<Book> RegisteredBooks { get; set; } = [];
+        public ICollection<BookCategory> RegisteredBookCategories { get; set; } = [];
+        public ICollection<Author> RegisteredAuthors { get; set; } = [];
+
+
         public void Create(string email, string password, string confirmedPassword, string name)
         {
             ValidateEmail(email);
@@ -59,13 +47,13 @@ namespace CommunityLibrary.Domain
             EntityValidationException.Validate(!isValidFormat, "The email format is invalid.");
 
         }
-        public void ValidatePassword(string password, string confirmedPassword)
+        public void ValidatePassword(string? password, string? confirmedPassword)
         {
             password = password?.Trim();
             confirmedPassword = confirmedPassword?.Trim();
             EntityValidationException.Validate(string.IsNullOrEmpty(password), "The password cannot be empty.");
-            EntityValidationException.Validate(password.Length < 8, "The password must be at least 8 characters long.");
-            EntityValidationException.Validate(password.Length > 20, "The password cannot exceed 20 characters.");
+            EntityValidationException.Validate(password?.Length < 8, "The password must be at least 8 characters long.");
+            EntityValidationException.Validate(password?.Length > 20, "The password cannot exceed 20 characters.");
             EntityValidationException.Validate(password != confirmedPassword, "The password and confirmed password do not match.");
         }
         

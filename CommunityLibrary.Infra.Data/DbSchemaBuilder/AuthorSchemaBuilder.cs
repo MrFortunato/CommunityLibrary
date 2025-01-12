@@ -32,10 +32,7 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
                 .HasForeignKey(x => x.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.RegisteredUser)
-                .WithOne()
-                .HasForeignKey<Author>(x => x.RegisteredUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

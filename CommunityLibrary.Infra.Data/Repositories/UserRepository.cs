@@ -39,8 +39,6 @@ namespace CommunityLibrary.Infra.Data.Repositories
                 .ToList(); 
         }
 
-
-
         public async Task<User> GetByIdAsync(Guid id)
         {
             var user = await _context.Users

@@ -27,9 +27,6 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(x => x.ConfirmedPassword)
-                  .HasMaxLength(100)
-                  .IsRequired();
 
             builder.Property(x => x.CreatedDate)
                  .HasColumnType("datetime")
@@ -45,21 +42,12 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
                 .IsRequired();
 
             // Relationships  
-            builder.HasOne(x => x.Client)
-                 .WithOne(a => a.User)
-                 .HasForeignKey<Client>(x => x.UserId);
-
-            builder.HasMany(x => x.RegisteredClients)
-                 .WithOne(a => a.RegisteredUser)
-                 .HasForeignKey(x => x.RegisteredByUserId);
+    
             
             builder.HasMany(x => x.RegisteredBooks)
                 .WithOne(a => a.RegisteredUser)
                 .HasForeignKey(x => x.RegisteredByUserId);
 
-            builder.HasMany(x => x.RegisteredAuthors)        
-                .WithOne(a => a.RegisteredUser)             
-                .HasForeignKey(x => x.RegisteredUserId); 
 
 
         }

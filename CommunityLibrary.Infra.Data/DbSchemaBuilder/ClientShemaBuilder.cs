@@ -16,8 +16,8 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
                 .ValueGeneratedOnAdd()
                 .IsRequired();
 
-            builder.Property(x => x.Name)
-                .HasMaxLength(100)
+            builder.Property(x => x.UserId)
+                .HasColumnType("BINARY(16)")
                 .IsRequired();
 
             builder.Property(x => x.CreatedDate)
@@ -25,29 +25,17 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
                  .HasDefaultValueSql("CURRENT_TIMESTAMP")
                  .IsRequired();
 
-            builder.Property(x => x.RegisteredByUserId)
-                .HasColumnType("BINARY(16)")
-                .ValueGeneratedOnAdd()
-                .IsRequired();
 
             builder.Property(x => x.Status)
                 .HasColumnType("TINYINT(1)")
                 .IsRequired();
 
-            //Relationships
-            builder.HasOne(x => x.RegisteredUser)
-                    .WithMany()
-                    .HasForeignKey(x => x.RegisteredByUserId);
 
             builder.HasMany(x => x.BookRentals)
                 .WithOne(x => x.Client)
                 .HasForeignKey(x => x.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.User)               
-                .WithOne(x => x.Client)                
-                .HasForeignKey<Client>(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);   
 
         }
     }

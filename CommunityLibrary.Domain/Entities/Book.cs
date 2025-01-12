@@ -11,34 +11,12 @@ namespace CommunityLibrary.Domain
        public required BookCategory BookCategory { get; set; }
        public string Description { get; private set; } = string.Empty;
        public Guid RegisteredByUserId { get; private set; }
-       public User RegisteredUser { get; set; }
-        public DateTime PublishedDate { get; private set; }
-       public ICollection<BookRental> BookRentals { get; set; }
+       public User? RegisteredUser { get; set; }
+       public DateTime PublishedDate { get; private set; }
+       public ICollection<BookRental> BookRentals { get; set; } = [];
 
-        public Book()
-        {
-            RegisteredUser = new();
-            Author = new();
-            BookCategory = new();
-            BookRentals = [];
-        }
-        internal Book(string title, string description, DateTime publishedDate, Author author, BookCategory bookCategory):this()    
-        {
-          
- 
-            ValidateTitle(title);
-            ValidateDescription(description);
-            ValidatePublishedDate(publishedDate);
-            ValidateAuthor(author);
-            ValidateBookCategory(bookCategory);
 
-            Id = Guid.NewGuid();
-            Title = title;
-            Description = description;
-            PublishedDate = publishedDate;
-            AuthorId = author.Id;
-            BookCategoryId = bookCategory.Id;
-        }
+
         private void ValidateTitle(string title)
         {
             EntityValidationException.Validate(string.IsNullOrWhiteSpace(title), "The title cannot be empty.");

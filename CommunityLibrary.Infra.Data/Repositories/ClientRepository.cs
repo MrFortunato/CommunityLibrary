@@ -25,7 +25,10 @@ namespace CommunityLibrary.Infra.Data.Repositories
              int pageSize = 10,
              CancellationToken cancellationToken = default)
         {
-            var clients = await _context.Clients.AsNoTracking().ToListAsync(cancellationToken);
+            var clients = await _context.Clients
+                .Include(u => u.User)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
 
             if (predicate != null)
             {
