@@ -18,8 +18,7 @@
 *.AssemblyReference.cache
 
 # Exceções específicas (remova ou ajuste conforme necessário)
-!**/Exceptions/*.cs # Não ignorar arquivos de exceção manualmente criados
-*.csproj
+
 # Ignorar arquivos relacionados a build e cache de pacotes NuGet
 **/obj/*.csproj.nuget.*
 **/obj/*.assets.cache
