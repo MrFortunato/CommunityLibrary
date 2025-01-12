@@ -31,7 +31,6 @@ namespace CommunityLibrary.Infra.Data
                 throw new ArgumentNullException(nameof(predicate), "A filtering condition is required.");
             }
 
-            // Obtém todos os dados sem rastreamento.
             var allData = await _context.BookCategories
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);

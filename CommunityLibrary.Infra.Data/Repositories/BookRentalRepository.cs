@@ -1,7 +1,5 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using System.Linq;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -31,19 +29,16 @@ namespace CommunityLibrary.Infra.Data.Repositories
             if (pageSize <= 0)
                 throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than 0.");
 
-            // Obtém todos os dados sem rastreamento.
             var allData = await _context.BookRentals
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
-            // Aplica o filtro, se fornecido.
             var filteredData = predicate != null
                 ? allData.Where(predicate)
                 : allData;
 
-            // Pagina os dados filtrados.
             var paginatedData = filteredData
-                .OrderBy(x => x.Id) // Ordena por um campo específico (exemplo: `Id`).
+                .OrderBy(x => x.Id) 
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 

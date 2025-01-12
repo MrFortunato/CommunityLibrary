@@ -67,7 +67,6 @@ namespace CommunityLibrary.Application.Services
                 }
                 return predicate(_mapper.Map<BookCategoryDetailsRequest>(bookCategory));
             }
-            // Fetch paginated entities from the repository
             var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
             return entities.Select(e => _mapper.Map<BookCategoryDetailsRequest>(e)); 
         }
