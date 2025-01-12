@@ -30,5 +30,4 @@
 **/obj/*.g.props
 **/obj/*.g.targets
 **/obj/*.dgspec.json
-/CommunityLibrary.Api/appsettings.json
-/CommunityLibrary.Api/appsettings.Development.json
+
