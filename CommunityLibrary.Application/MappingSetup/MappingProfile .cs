@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CommunityLibrary.Application.DTO;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
 
@@ -16,9 +15,12 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateMap<UserCreateRequest, User>().ReverseMap();
             CreateMap<UserUpdateRequest, User>().ReverseMap();
 
-            CreateMap<AuthorDeatailsRequest, Author>().ReverseMap();
-            CreateMap<AuthorCreateRequest, Author>().ReverseMap();
-            CreateMap<AuthorUpdateRequest, Author>().ReverseMap();
+            CreateMap<AuthorDetailsRequest, Author>().ReverseMap()
+                .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.User.Id));
+            CreateMap<AuthorCreateRequest, Author>().ReverseMap()
+                 .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.User.Id)); ;
+            CreateMap<AuthorUpdateRequest, Author>().ReverseMap()
+                 .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.User.Id)); ;
 
             CreateMap<BookCategoryDetailsRequest, BookCategory>().ReverseMap();
             CreateMap<BookCategoryCreateRequest, BookCategory>().ReverseMap();
@@ -36,8 +38,7 @@ namespace CommunityLibrary.Application.MappingSetup
                 .ForMember(c => c.Name, opt => opt.MapFrom(u =>u.User.Name))
                 .ForMember(c => c.Email, opt => opt.MapFrom(u => u.User.Email));
       
-            CreateMap<BookRentalDto, BookRental>().ReverseMap();
- 
+
 
         }
     }

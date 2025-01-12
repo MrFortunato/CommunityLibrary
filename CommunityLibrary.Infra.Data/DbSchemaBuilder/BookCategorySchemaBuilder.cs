@@ -41,7 +41,7 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
 
             builder.HasOne(x => x.RegisteredUser)  
               .WithMany(x => x.RegisteredBookCategories)    
-              .HasForeignKey(x => x.RegisteredUserId)  
+              .HasForeignKey(x => x.RegisteredByUserId)  
               .OnDelete(DeleteBehavior.Restrict);  
 
 

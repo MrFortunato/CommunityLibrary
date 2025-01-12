@@ -41,10 +41,14 @@ namespace CommunityLibrary.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<Guid>("RegisteredByUserId")
+                        .HasColumnType("char(36)");
+
                     b.Property<bool>("Status")
                         .HasColumnType("TINYINT(1)");
 
                     b.Property<byte[]>("UserId")
+                        .IsRequired()
                         .HasColumnType("BINARY(16)");
 
                     b.HasKey("Id");
@@ -83,7 +87,7 @@ namespace CommunityLibrary.Infra.Data.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("PublishedDate")
+                    b.Property<DateTime?>("PublishedDate")
                         .HasColumnType("datetime");
 
                     b.Property<byte[]>("RegisteredByUserId")
@@ -134,7 +138,7 @@ namespace CommunityLibrary.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<byte[]>("RegisteredUserId")
+                    b.Property<byte[]>("RegisteredByUserId")
                         .IsRequired()
                         .HasColumnType("BINARY(16)");
 
@@ -143,7 +147,7 @@ namespace CommunityLibrary.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RegisteredUserId");
+                    b.HasIndex("RegisteredByUserId");
 
                     b.ToTable("BookCategories");
                 });
@@ -223,8 +227,7 @@ namespace CommunityLibrary.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Clients");
                 });
@@ -268,9 +271,13 @@ namespace CommunityLibrary.Infra.Data.Migrations
 
             modelBuilder.Entity("CommunityLibrary.Domain.Author", b =>
                 {
-                    b.HasOne("CommunityLibrary.Domain.User", null)
+                    b.HasOne("CommunityLibrary.Domain.User", "User")
                         .WithMany("RegisteredAuthors")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CommunityLibrary.Domain.Book", b =>
@@ -304,7 +311,7 @@ namespace CommunityLibrary.Infra.Data.Migrations
                 {
                     b.HasOne("CommunityLibrary.Domain.User", "RegisteredUser")
                         .WithMany("RegisteredBookCategories")
-                        .HasForeignKey("RegisteredUserId")
+                        .HasForeignKey("RegisteredByUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -341,8 +348,8 @@ namespace CommunityLibrary.Infra.Data.Migrations
             modelBuilder.Entity("CommunityLibrary.Domain.Client", b =>
                 {
                     b.HasOne("CommunityLibrary.Domain.User", "User")
-                        .WithOne("Client")
-                        .HasForeignKey("CommunityLibrary.Domain.Client", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -372,9 +379,6 @@ namespace CommunityLibrary.Infra.Data.Migrations
             modelBuilder.Entity("CommunityLibrary.Domain.User", b =>
                 {
                     b.Navigation("BookRentals");
-
-                    b.Navigation("Client")
-                        .IsRequired();
 
                     b.Navigation("RegisteredAuthors");
 

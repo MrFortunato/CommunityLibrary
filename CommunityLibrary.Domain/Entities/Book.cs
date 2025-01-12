@@ -12,7 +12,7 @@ namespace CommunityLibrary.Domain
        public string Description { get; private set; } = string.Empty;
        public Guid RegisteredByUserId { get; private set; }
        public User? RegisteredUser { get; set; }
-       public DateTime PublishedDate { get; private set; }
+       public DateTime? PublishedDate { get; private set; }
        public ICollection<BookRental> BookRentals { get; set; } = [];
 
 
