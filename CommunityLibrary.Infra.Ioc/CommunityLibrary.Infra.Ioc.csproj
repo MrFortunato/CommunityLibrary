@@ -12,8 +12,4 @@
     <ProjectReference Include="..\CommunityLibrary.Infra.Data\CommunityLibrary.Infra.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NovaPasta\" />
-  </ItemGroup>
-
 </Project>

@@ -1,46 +1,22 @@
 ﻿using CommunityLibrary.Domain.Exceptions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CommunityLibrary.Domain
 {
-    public class Client: Entity 
+    public class Client: BaseEntity 
     {
-        public Guid UserId { get; set; }
-        public User User { get; set; }
-        public Guid RegisteredByUserId { get; set; }
-        public User RegisteredUser { get; set; }
         public ICollection<BookRental> BookRentals { get; set; }
-        public Client()
-        {
-            User = new();
-            RegisteredUser = new(); 
-            BookRentals = [];
-        }   
-        internal Client(string name, Guid registeredByUserId, Guid userId) : this()
-        {
+        public Guid UserId { get; set; }
+        public User? User { get; set; }  
 
-            ValidateName(name); 
-            Id = Guid.NewGuid(); 
-            Name = name;
-            CreatedDate = DateTime.Now;
-            Status = true;
-            RegisteredByUserId = registeredByUserId;
-            UserId = userId;
-        }
-        public void Create(string name, Guid userId, Guid registeredUserId)
+
+        public void Create( Guid userId)
         {
-            ValidateName(name);
-            Id = Guid.NewGuid();    
-            UserId = userId;
-            RegisteredByUserId = registeredUserId;  
-            Name = name;
             CreatedDate = DateTime.Now;
             Status = true;
         }
-        public void Update(string name,Guid userId)
+        public void Update(Guid userId)
         {
-            ValidateName(name);
-            UserId = userId;
-            Name = name;
             LastModifiedDate = DateTime.Now;
         }
         private void ValidateName(string name)

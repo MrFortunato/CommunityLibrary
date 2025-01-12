@@ -1,5 +1,4 @@
-﻿using CommunityLibrary.Application.DTO;
-using CommunityLibrary.Application.Interfaces;
+﻿using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.MappingSetup;
 using CommunityLibrary.Application.Services;
 using CommunityLibrary.Domain;
@@ -35,10 +34,13 @@ namespace CommunityLibrary.Infra.Ioc
             services.AddScoped(typeof(IGenericRepository<User>), typeof(UserRepository));
             services.AddScoped(typeof(IGenericRepository<Client>), typeof(ClientRepository));
             services.AddScoped(typeof(IGenericRepository<BookRental>), typeof(BookRentalRepository));
+            services.AddScoped(typeof(IGenericRepository<Author>), typeof(AuthorRepository));
 
-            //services.AddScoped(typeof(IGenerecService<BookCategoryDto>),typeof(BookCategoryService));
-            services.AddScoped(typeof(IGenerecService<UserDto>), typeof(UserService));
-            services.AddScoped(typeof(IGenerecService<BookCategoryDto>), typeof(BookCategoryService));
+            services.AddScoped(typeof(IBookService), typeof(BookService));
+            services.AddScoped(typeof(IAuthorService), typeof(AuthorService));
+            services.AddScoped(typeof(IClientService), typeof(ClientService));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
+            services.AddScoped(typeof(IBookCategoryService), typeof(BookCategoryService));
 
             services.AddAutoMapper(typeof(MappingProfile));
             return services;

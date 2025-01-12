@@ -6,23 +6,10 @@ namespace CommunityLibrary.Domain
     {
         public string Description { get; set; } = string.Empty;
         public Guid RegisteredUserId { get; set; }  
-        public User RegisteredUser { get; set; }
-        public ICollection<Book> Books { get; set; }
-        public BookCategory()
-        {
-            RegisteredUser = new();
-            Books = [];
-        }
-        internal BookCategory(Guid id,string name ,string description): this()  
-        {
-            ValidateName(name);
-            ValidateDescription(description);
-            Id = id;
-            Name = name;
-            Description = description;
-            CreatedDate = DateTime.Now;
-            Status = true;
-        }
+        public User? RegisteredUser { get; set; }
+        public ICollection<Book> Books { get; set; }= [];
+
+
         public void Create(string name, string description)
         {
             ValidateName(name);
