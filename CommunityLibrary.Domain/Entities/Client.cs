@@ -5,10 +5,9 @@ namespace CommunityLibrary.Domain
 {
     public class Client: BaseEntity 
     {
-        public ICollection<BookRental> BookRentals { get; set; }
+        public ICollection<BookRental> BookRentals { get; set; } = [];
         public Guid UserId { get; set; }
-        public User? User { get; set; }  
-
+        public User User { get; set; } = new();
 
         public void Create( Guid userId)
         {

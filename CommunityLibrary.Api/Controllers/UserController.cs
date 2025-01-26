@@ -1,5 +1,4 @@
-﻿using CommunityLibrary.Application.DTO;
-using CommunityLibrary.Application.Interfaces;
+﻿using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +28,7 @@ namespace CommunityLibrary.Api.Controllers
             {
                 predicate = user =>
                   user.Name.Contains(filter) ||
-                  user.Id.ToString().Equals(filter); // Converte Id para string
+                  user.Id.ToString().Equals(filter); 
             }
 
             var users = await _userService.GetAllAsync(predicate, pageNumber, pageSize, cancellationToken);

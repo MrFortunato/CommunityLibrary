@@ -32,8 +32,9 @@ namespace CommunityLibrary.Infra.Data
             }
 
             var allData = await _context.BookCategories
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+                                        .Include(c => c.RegisteredByUser)
+                                        .AsNoTracking()
+                                        .ToListAsync(cancellationToken);
 
    
             var filteredData = allData.Where(predicate);
@@ -51,8 +52,9 @@ namespace CommunityLibrary.Infra.Data
         public async Task<BookCategory> GetByIdAsync(Guid id)
         {
             var categoryBook = await _context.BookCategories
-                .AsNoTracking()
-                .FirstOrDefaultAsync(bc => bc.Id.Equals(id));
+                                             .Include(c => c.RegisteredByUser)
+                                             .AsNoTracking()
+                                             .FirstOrDefaultAsync(bc => bc.Id.Equals(id));
 
             if (categoryBook == null) 
             {
@@ -71,10 +73,12 @@ namespace CommunityLibrary.Infra.Data
 
         public async Task<BookCategory> UpdateAsync(BookCategory entity)
         {
-            var existingEntity = await _context.BookCategories.FindAsync(entity.Id);
+            var existingEntity = await _context.BookCategories
+                                               .Include(bc => bc.RegisteredByUser)
+                                               .FirstOrDefaultAsync(u => u.Id == entity.Id);
             if (existingEntity == null)
                 throw new KeyNotFoundException($"BookCategory with ID {entity.Id} not found.");
-
+            entity.RegisteredByUser = existingEntity.RegisteredByUser;
             _context.Entry(existingEntity).CurrentValues.SetValues(entity);
             await _context.SaveChangesAsync();
 

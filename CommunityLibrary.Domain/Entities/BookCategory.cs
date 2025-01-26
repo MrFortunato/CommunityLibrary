@@ -5,8 +5,8 @@ namespace CommunityLibrary.Domain
     public class BookCategory : Entity
     {
         public string Description { get; set; } = string.Empty;
-        public Guid RegisteredUserId { get; set; }  
-        public User? RegisteredUser { get; set; }
+        public Guid RegisteredByUserId { get; set; }
+        public required User RegisteredByUser { get; set; }
         public ICollection<Book> Books { get; set; }= [];
 
 

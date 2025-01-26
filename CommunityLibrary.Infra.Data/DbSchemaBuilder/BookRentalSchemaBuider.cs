@@ -21,7 +21,7 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-            builder.Property(x => x.UserId)
+            builder.Property(x => x.RegisteredByUserId)
                 .HasColumnType("BINARY(16)")
                 .ValueGeneratedOnAdd()
                 .IsRequired();
@@ -50,9 +50,9 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
                 .HasForeignKey(x => x.BookId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.User)
+            builder.HasOne(x => x.RegisteredByUser)
                 .WithMany(x => x.BookRentals)
-                .HasForeignKey(x => x.UserId)
+                .HasForeignKey(x => x.RegisteredByUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Client)

@@ -58,16 +58,16 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<UserDetailsRequest>(entity);
         }
 
-        public async Task<UserCreateRequest> InsertAsync(UserCreateRequest entity)
+        public async Task<UserDetailsRequest> InsertAsync(UserCreateRequest entity)
         {
             var domainEntity = _mapper.Map<User>(entity);
             domainEntity.Id = Guid.NewGuid();
             var result = await _repository.InsertAsync(domainEntity);
 
-            return _mapper.Map<UserCreateRequest>(result);
+            return _mapper.Map<UserDetailsRequest>(result);
         }
 
-        public async Task<UserUpdateRequest> UpdateAsync(UserUpdateRequest entity)
+        public async Task<UserDetailsRequest> UpdateAsync(UserUpdateRequest entity)
         {
             var domainEntity = await _repository.GetByIdAsync(entity.Id);
             if (domainEntity == null)
@@ -77,7 +77,7 @@ namespace CommunityLibrary.Application.Services
             var user = _mapper.Map<User>(entity);
             user.LastModifiedDate = DateTime.UtcNow;
             var updatedEntity = await _repository.UpdateAsync(user);
-            return _mapper.Map<UserUpdateRequest>(updatedEntity);
+            return _mapper.Map<UserDetailsRequest>(updatedEntity);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace CommunityLibrary.Infra.Data.Repositories
             var bookRental = await _context.BookRentals
                 .Include(br => br.Book)
                 .Include(br => br.Client)
-                .Include(br => br.User)
+                .Include(br => br.RegisteredByUser)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(br => br.Id.Equals(id));
 

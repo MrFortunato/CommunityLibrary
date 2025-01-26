@@ -18,10 +18,7 @@
 *.AssemblyReference.cache
 
 # Exceções específicas (remova ou ajuste conforme necessário)
-!**/Exceptions/*.cs # Não ignorar arquivos de exceção manualmente criados
 
-**/obj/project.nuget.cache
-*.csproj
 # Ignorar arquivos relacionados a build e cache de pacotes NuGet
 **/obj/*.csproj.nuget.*
 **/obj/*.assets.cache
@@ -33,6 +30,5 @@
 **/obj/*.g.props
 **/obj/*.g.targets
 **/obj/*.dgspec.json
-/CommunityLibrary.Api/CommunityLibrary.Api.csproj.user
+
 /CommunityLibrary.Api/appsettings.json
-*.cs

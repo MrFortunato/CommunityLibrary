@@ -14,16 +14,16 @@ namespace CommunityLibrary.Application.Services
             _mapper = mapper;
             _repository = repository;
         }
-        public async Task<BookCategoryCreateRequest> InsertAsync(BookCategoryCreateRequest entity)
+        public async Task<BookCategoryDetailsRequest> InsertAsync(BookCategoryCreateRequest entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity), "The category cannot be null.");
 
             var bookCategory = _mapper.Map<BookCategory>(entity);
             var addedEntity = await _repository.InsertAsync(bookCategory);
-            return _mapper.Map<BookCategoryCreateRequest>(addedEntity);
+            return _mapper.Map<BookCategoryDetailsRequest>(addedEntity);
         }
-        public async Task<BookCategoryUpdateRequest> UpdateAsync(BookCategoryUpdateRequest entity)
+        public async Task<BookCategoryDetailsRequest> UpdateAsync(BookCategoryUpdateRequest entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity), "The category cannot be null.");
@@ -31,7 +31,7 @@ namespace CommunityLibrary.Application.Services
             var bookCategory = _mapper.Map<BookCategory>(entity);
             bookCategory.LastModifiedDate = DateTime.UtcNow;
             var addedEntity = await _repository.UpdateAsync(bookCategory);
-            return _mapper.Map<BookCategoryUpdateRequest>(addedEntity);
+            return _mapper.Map<BookCategoryDetailsRequest>(addedEntity);
         }
         public async Task<BookCategoryDetailsRequest> DeleteAsync(Guid id)
         {
