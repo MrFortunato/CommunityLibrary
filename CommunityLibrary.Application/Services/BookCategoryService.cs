@@ -48,7 +48,7 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<BookCategoryDetailsRequest>(addedEntity);
         }
 
-        public async Task<IEnumerable<BookCategoryDetailsRequest>> GetAllAsync(
+        public async Task<PaginatedResultService<BookCategoryDetailsRequest>> GetAllAsync(
             Func<BookCategoryDetailsRequest, bool>? predicate = null,
             int pageNumber = 1,
             int pageSize = 10,
@@ -68,7 +68,7 @@ namespace CommunityLibrary.Application.Services
                 return predicate(_mapper.Map<BookCategoryDetailsRequest>(bookCategory));
             }
             var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
-            return entities.Select(e => _mapper.Map<BookCategoryDetailsRequest>(e)); 
+            return  _mapper.Map<PaginatedResultService<BookCategoryDetailsRequest>>(entities); 
         }
 
 

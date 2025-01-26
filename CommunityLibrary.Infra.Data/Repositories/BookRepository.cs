@@ -79,5 +79,10 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
             return entity;
         }
+
+        Task<Domain.PaginatedResponse<Book>> IGenericRepository<Book>.GetAllAsync(Func<Book, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

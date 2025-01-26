@@ -1,4 +1,5 @@
-﻿using CommunityLibrary.Application.Interfaces;
+﻿using CommunityLibrary.Application;
+using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,24 +17,33 @@ namespace CommunityLibrary.Api.Controllers
         {
             _userService = userRepository;
         }
+
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<UserDetailsRequest>> GetAll([FromQuery] string? filter = null,
+        public async Task<ActionResult<PaginatedResultService<UserDetailsRequest>>> GetAll(
+            [FromQuery] string? filter = null,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
+            if (pageNumber < 1)
+                return BadRequest("Page number must be greater than or equal to 1.");
+
+            if (pageSize < 1)
+                return BadRequest("Page size must be greater than or equal to 1.");
+
             Func<UserDetailsRequest, bool>? predicate = null;
 
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 predicate = user =>
-                  user.Name.Contains(filter) ||
-                  user.Id.ToString().Equals(filter); 
+                    user.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                    user.Email.Contains(filter, StringComparison.OrdinalIgnoreCase);
             }
+            var paginatedResult = await _userService.GetAllAsync(predicate, pageNumber, pageSize, cancellationToken);
 
-            var users = await _userService.GetAllAsync(predicate, pageNumber, pageSize, cancellationToken);
-            return users;
+            return Ok(paginatedResult);
         }
+
 
         // GET api/<UserController>/5
         [HttpGet("GetById/{id}")]

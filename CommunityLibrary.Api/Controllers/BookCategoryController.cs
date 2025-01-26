@@ -1,10 +1,7 @@
-﻿using CommunityLibrary.Application.Interfaces;
+﻿using CommunityLibrary.Application;
+using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CommunityLibrary.Api.Controllers
 {
@@ -22,7 +19,7 @@ namespace CommunityLibrary.Api.Controllers
 
         // GET: api/BookCategory/GetAll
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<BookCategoryDetailsRequest>> GetAll([FromQuery] string? filter = null,
+        public async Task<PaginatedResultService<BookCategoryDetailsRequest>> GetAll([FromQuery] string? filter = null,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)

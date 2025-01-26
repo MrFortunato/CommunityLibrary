@@ -19,26 +19,6 @@ namespace CommunityLibrary.Infra.Data.Repositories
             return entity;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync(
-        Func<User, bool>? predicate = null,
-        int pageNumber = 1,
-        int pageSize = 10,
-        CancellationToken cancellationToken = default)
-        {
-            
-            var users = await _context.Users.AsNoTracking().ToListAsync(cancellationToken);
-
-            if (predicate != null)
-            {
-                users = users.Where(predicate).ToList();
-            }
-            return users
-                .OrderBy(u => u.Id) 
-                .Skip((pageNumber - 1) * pageSize) 
-                .Take(pageSize) 
-                .ToList(); 
-        }
-
         public async Task<User> GetByIdAsync(Guid id)
         {
             var user = await _context.Users
@@ -69,5 +49,74 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
             return entity;
         }
+
+        //public async Task<PaginatedResponse<User>> GetAllAsync(Func<User, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        //{
+
+        //    var users = await _context.Users
+        //                              .AsNoTracking()
+        //                              .ToListAsync(cancellationToken);
+
+        //    if (predicate != null)
+        //    {
+        //        users = users.Where(predicate).ToList();
+        //    }
+
+
+        //    int totalItems = users.Count;
+
+
+        //    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+        //    var result =  users
+        //        .OrderBy(u => u.Id) 
+        //        .Skip((pageNumber - 1) * pageSize) 
+        //        .Take(pageSize) 
+        //        .ToList();
+
+        //    return new PaginatedResponse<User>
+        //    {
+        //        Items = result,
+        //        TotalItems = totalItems,
+        //        TotalPages = totalPages,
+        //        PageSize = pageSize,
+        //        CurrentPage = (pageNumber - 1) * pageSize
+
+        //    };
+        //}
+        public async Task<PaginatedResponse<User>> GetAllAsync(
+    Func<User, bool>? predicate,
+    int pageNumber,
+    int pageSize,
+    CancellationToken cancellationToken)
+        {
+            var query = _context.Users.AsNoTracking();
+
+            if (predicate != null)
+            {
+                // Para permitir o uso de Linq-to-SQL, convertendo o predicado em IQueryable
+                query = query.Where(u => predicate(u));
+            }
+
+            int totalItems = await query.CountAsync(cancellationToken);
+
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var result = await query
+                .OrderBy(u => u.Id) 
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PaginatedResponse<User>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
+        }
+
     }
 }

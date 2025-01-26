@@ -74,5 +74,10 @@ namespace CommunityLibrary.Infra.Data.Repositories
             await _context.SaveChangesAsync();
             return existingAuthor;
         }
+
+        Task<Domain.PaginatedResponse<Author>> IGenericRepository<Author>.GetAllAsync(Func<Author, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

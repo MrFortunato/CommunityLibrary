@@ -43,7 +43,9 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateMap<ClientDetailsRequest, Client>().ReverseMap()
                 .ForMember(c => c.Name, opt => opt.MapFrom(u =>u.User.Name))
                 .ForMember(c => c.Email, opt => opt.MapFrom(u => u.User.Email));
-      
+
+            CreateMap<PaginatedResponse<User>, PaginatedResultService<UserDetailsRequest>>().ReverseMap();
+
 
 
         }

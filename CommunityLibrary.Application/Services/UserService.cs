@@ -28,24 +28,6 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<UserDetailsRequest>(entity);
         }
 
-        public async Task<IEnumerable<UserDetailsRequest>> GetAllAsync(
-            Func<UserDetailsRequest, bool>? predicate = null,
-            int pageNumber = 1,
-            int pageSize = 10,
-            CancellationToken cancellationToken = default)
-        {
-            bool domainPredicate(User user)
-            {
-                if (predicate == null)
-                {
-                    return true;
-                }
-                return predicate(_mapper.Map<UserDetailsRequest>(user));
-            }
-
-            var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
-            return entities.Select(e => _mapper.Map<UserDetailsRequest>(e));
-        }
 
         public async Task<UserDetailsRequest> GetByIdAsync(Guid id)
         {
@@ -78,6 +60,25 @@ namespace CommunityLibrary.Application.Services
             user.LastModifiedDate = DateTime.UtcNow;
             var updatedEntity = await _repository.UpdateAsync(user);
             return _mapper.Map<UserDetailsRequest>(updatedEntity);
+        }
+
+        public async Task<PaginatedResultService<UserDetailsRequest>> GetAllAsync(Func<UserDetailsRequest, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        {
+            // Define uma função para aplicar o filtro no domínio
+            bool domainPredicate(User user)
+            {
+                if (predicate == null)
+                {
+                    return true;
+                }
+                return predicate(_mapper.Map<UserDetailsRequest>(user));
+            }
+
+            // Obtém todas as entidades que atendem ao filtro
+            var allEntities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
+            var mappedEntities = _mapper.Map<PaginatedResultService<UserDetailsRequest>>(allEntities);
+
+            return mappedEntities;
         }
     }
 }
