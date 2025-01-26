@@ -11,6 +11,6 @@ namespace CommunityLibrary.Application.Request
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public bool Status { get; set; }
-        public Guid RegisteredByUserId { get; set; }
+        public string  RegisteredByUserName { get; set; } = string.Empty;
     }
 }

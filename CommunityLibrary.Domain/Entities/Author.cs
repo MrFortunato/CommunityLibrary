@@ -6,7 +6,7 @@ namespace CommunityLibrary.Domain
     {
         public ICollection<Book> Books { get; set; } = [];  
         public Guid RegisteredByUserId { get; set; }
-        public User User { get; set; }
+        public User RegisteredByUser { get; set; } = new User();
 
 
         public void Create(string name,Guid registeredUserId)

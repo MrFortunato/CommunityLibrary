@@ -30,7 +30,7 @@ namespace CommunityLibrary.Infra.Data.Repositories
         {
        
             var authors = await _context.Authors
-                .Include(u => u.User)
+                .Include(u => u.RegisteredByUser)
                 .Include(b => b.Books)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
@@ -47,7 +47,9 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
         public async Task<Author> GetByIdAsync(Guid id)
         {
-            var author = await _context.Authors.FindAsync(id);
+            var author = await _context.Authors.Include(u => u.RegisteredByUser)
+                                .Include(b => b.Books)
+                                .FirstOrDefaultAsync(a => a.Id == id);
             if (author == null) throw new KeyNotFoundException($"Author with ID {id} not found.");
             return author;
         }

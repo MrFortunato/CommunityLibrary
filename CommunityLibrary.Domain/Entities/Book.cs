@@ -11,7 +11,7 @@ namespace CommunityLibrary.Domain
        public required BookCategory BookCategory { get; set; }
        public string Description { get; private set; } = string.Empty;
        public Guid RegisteredByUserId { get; private set; }
-       public User? RegisteredUser { get; set; }
+        public required User RegisteredByUser { get; set; } 
        public DateTime? PublishedDate { get; private set; }
        public ICollection<BookRental> BookRentals { get; set; } = [];
 

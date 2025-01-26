@@ -45,10 +45,16 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
     
             
             builder.HasMany(x => x.RegisteredBooks)
-                .WithOne(a => a.RegisteredUser)
+                .WithOne(a => a.RegisteredByUser)
                 .HasForeignKey(x => x.RegisteredByUserId);
 
+            builder.HasMany(x => x.RegisteredAuthors)
+                .WithOne(a => a.RegisteredByUser)
+                .HasForeignKey(x => x.RegisteredByUserId);
 
+            builder.HasMany(x => x.RegisteredBookCategories)
+                .WithOne(a => a.RegisteredByUser)
+                .HasForeignKey(x => x.RegisteredByUserId);
 
         }
     }

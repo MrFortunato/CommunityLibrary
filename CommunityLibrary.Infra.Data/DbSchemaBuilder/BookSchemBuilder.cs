@@ -55,7 +55,7 @@ namespace CommunityLibrary.Infra.Data.DbSchemaBuilder
                 .WithMany(a => a.Books)
                 .HasForeignKey(x => x.BookCategoryId);
 
-            builder.HasOne(x => x.RegisteredUser)
+            builder.HasOne(x => x.RegisteredByUser)
                     .WithMany(a => a.RegisteredBooks)
                 .HasForeignKey(x => x.RegisteredByUserId);
 

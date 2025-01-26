@@ -28,6 +28,7 @@ namespace CommunityLibrary.Infra.Data.Repositories
             var books = await _context.Books
                 .Include(a => a.Author)
                 .Include(c => c.BookCategory)
+                .Include(c => c.RegisteredByUser)
                 .AsNoTracking().ToListAsync(cancellationToken);
 
             if (predicate != null)
@@ -45,7 +46,8 @@ namespace CommunityLibrary.Infra.Data.Repositories
         {
           var book = await _context.Books
                 .Include(b => b.Author)
-                .Include(b => b.BookCategory) 
+                .Include(b => b.BookCategory)
+                .Include(c => c.RegisteredByUser)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
 
@@ -66,10 +68,12 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
         public async Task<Book> UpdateAsync(Book entity)
         {
-            var existingEntity = await _context.Books.FindAsync(entity.Id);
+            var existingEntity = await _context.Books
+                .Include(c => c.RegisteredByUser)
+                .FirstOrDefaultAsync(u => u.Id == entity.Id);
             if (existingEntity == null)
                 throw new KeyNotFoundException($"Book with ID {entity.Id} not found.");
-
+            entity.RegisteredByUser = existingEntity.RegisteredByUser;
             _context.Entry(existingEntity).CurrentValues.SetValues(entity);
             await _context.SaveChangesAsync();
 

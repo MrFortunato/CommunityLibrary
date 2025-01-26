@@ -17,7 +17,5 @@ namespace CommunityLibrary.Application.Request
         [Required(ErrorMessage = "Status is required.")]
         public bool Status { get; set; }
 
-        [Required(ErrorMessage = "RegisteredByUserId is required.")]
-        public Guid RegisteredByUserId { get; set; }
     }
 }

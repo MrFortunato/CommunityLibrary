@@ -16,21 +16,27 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateMap<UserUpdateRequest, User>().ReverseMap();
 
             CreateMap<AuthorDetailsRequest, Author>().ReverseMap()
-                .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.User.Id));
+                .ForMember(a => a.RegisteredByUserName, opt => opt.MapFrom(b => b.RegisteredByUser.Name));
             CreateMap<AuthorCreateRequest, Author>().ReverseMap()
-                 .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.User.Id)); ;
-            CreateMap<AuthorUpdateRequest, Author>().ReverseMap()
-                 .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.User.Id)); ;
+                 .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.RegisteredByUser.Id));
+            CreateMap<AuthorUpdateRequest, Author>().ReverseMap();
+                
 
-            CreateMap<BookCategoryDetailsRequest, BookCategory>().ReverseMap();
-            CreateMap<BookCategoryCreateRequest, BookCategory>().ReverseMap();
+            CreateMap<BookCategoryDetailsRequest, BookCategory>().ReverseMap()
+                .ForMember(a => a.RegisteredByUserName, opt => opt.MapFrom(b => b.RegisteredByUser.Name)); 
+            CreateMap<BookCategoryCreateRequest, BookCategory>().ReverseMap()
+                  .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.RegisteredByUser.Id)); 
             CreateMap<BookCategoryUpdateRequest, BookCategory>().ReverseMap();
 
-            CreateMap<BookCreateRequest, Book>().ReverseMap();
-            CreateMap<BookUpdateRequest, Book>().ReverseMap();
+            CreateMap<BookCreateRequest, Book>().ReverseMap()
+                  .ForMember(a => a.RegisteredByUserId, opt => opt.MapFrom(b => b.RegisteredByUser.Id))
+                  .ForMember(a => a.BookCategoryId, opt => opt.MapFrom(b => b.BookCategory.Id));
+            CreateMap<BookUpdateRequest, Book>().ReverseMap()
+                  .ForMember(a => a.BookCategoryId, opt => opt.MapFrom(b => b.BookCategory.Id));
             CreateMap<BookDetailsRequest, Book>().ReverseMap()
              .ForMember(d => d.BookCategory, opt => opt.MapFrom(b => b.BookCategory.Description))
-             .ForMember(a => a.AuthorName, opt => opt.MapFrom(b =>b.Author.Name));
+             .ForMember(a => a.AuthorName, opt => opt.MapFrom(b =>b.Author.Name))
+              .ForMember(a => a.RegisteredByUserName, opt => opt.MapFrom(b => b.RegisteredByUser.Name)); ;
             
             CreateMap<ClientCreateRequest, Client>().ReverseMap();
             CreateMap<ClientUpdateRequest, Client>().ReverseMap();

@@ -17,8 +17,15 @@ public class BookCreateRequest
 
     //[Required(ErrorMessage = "Status is required.")]
     //[RegularExpression("^(Active|Inactive|Pending)$", ErrorMessage = "Status must be 'Active', 'Inactive', or 'Pending'.")]
-    public string Status { get; set; } = string.Empty;
+    public bool Status { get; set; } = true;
 
-    [Required(ErrorMessage = "Registered by user ID is required.")]
+    [Required(ErrorMessage = "AuthorId is required.")]
+    public Guid AuthorId { get; set; }
+
+    [Required(ErrorMessage = "BookCategoryId is required.")]
+    public Guid BookCategoryId { get; set; }
+
+    [Required(ErrorMessage = "RegisteredByUserId is required.")]
     public Guid RegisteredByUserId { get; set; }
+
 }

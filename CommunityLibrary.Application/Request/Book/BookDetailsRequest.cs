@@ -8,5 +8,6 @@
         public string AuthorName { get; set; } = string.Empty;
         public string BookCategory { get; set; } = string.Empty;
         public DateTime PublishedDate { get; set; }
+        public string RegisteredByUserName { get; set; } = string.Empty;
     }
 }

@@ -14,7 +14,5 @@ namespace CommunityLibrary.Application.Request
         [Required(ErrorMessage = "The author status is required.")]
         public bool Status { get; set; }
 
-        [Required(ErrorMessage = "The ID of the user who registered this author is required.")]
-        public Guid RegisteredByUserId { get; set; }
     }
 }
