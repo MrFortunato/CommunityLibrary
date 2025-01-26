@@ -215,7 +215,7 @@ For questions or suggestions, contact:
 
 - **Name**: Fortunato Cassuendi
 - **Email**: fortunatocassuendi@hotmail.com
-- **GitHub**: [github.com/your-profile](https://github.com/MrFortunato)
+- **GitHub**: [MrFortunato](https://github.com/MrFortunato)
 
 Boa 
 
