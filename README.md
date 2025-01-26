@@ -1,168 +1,221 @@
-### Projeto Completo: Biblioteca Comunitária Online com Angular e Notificações por E-mail
+# Community Library Management System
 
-A seguir, apresento o plano detalhado e completo para implementar o projeto, incluindo o frontend em **Angular**, o backend em **ASP.NET Core**, e notificações por e-mail.
+## Overview
 
----
+The Community Library Management System is a full-stack web application that enables users to manage books, loans, and notifications for a community library. Built with **ASP.NET Core** for the backend and **Angular** for the frontend, it provides an intuitive interface for library users and administrators.
 
-### **1. Estrutura do Projeto**
+Key features include:
 
-**Frontend (Angular):**
-- Gerenciar toda a interface do usuário com componentes modulares.
-- Comunicação com o backend via APIs RESTful.
-- Autenticação e segurança com JWT (JSON Web Tokens).
-
-**Backend (ASP.NET Core):**
-- Gerenciar dados e lógica do negócio, incluindo autenticação, empréstimos e livros.
-- Serviços de envio de e-mails para notificações automáticas.
-- Hosted Service para tarefas agendadas.
-
-**Banco de Dados:**
-- Use **SQL Server** ou **PostgreSQL** para armazenar informações de livros, usuários e empréstimos.
+- User registration and authentication.
+- Browsing and searching books.
+- Loan management and tracking.
+- Automated email notifications for loan reminders and reservation updates.
+- Administrative tools for managing books and users.
 
 ---
 
-### **2. Frontend com Angular**
+## Features
 
-#### **Estrutura Modular**
-Divida a aplicação Angular em módulos para cada funcionalidade principal:
-1. **Módulo de Autenticação**:
-   - Registro e login.
-   - Armazene o token JWT no armazenamento local.
-2. **Módulo de Gestão de Livros**:
-   - Listagem de livros, detalhes e pesquisa.
-   - Paginação e filtros avançados (por autor, título, gênero).
-3. **Módulo de Empréstimos**:
-   - Solicitação de empréstimos.
-   - Histórico e status do usuário.
-4. **Módulo Administrativo**:
-   - Adicionar, editar e remover livros.
-   - Gerenciar usuários e reservas.
+### General Features
 
-#### **Tecnologias e Ferramentas**
-1. **Angular Material**:
-   - Criação de um design moderno e responsivo.
-   - Use tabelas, botões e diálogos para gerenciar os dados.
-2. **Gerenciamento de Estado**:
-   - Utilize **NgRx** para controlar o estado global da aplicação.
-   - Defina actions e reducers para manipular dados como livros e usuários.
-3. **Roteamento**:
-   - Configure rotas protegidas com guards.
-   - Use lazy loading para carregar módulos conforme necessário.
-4. **Notificações ao Usuário**:
-   - Use **ngx-toastr** para exibir mensagens (ex.: "Empréstimo realizado com sucesso!").
+- **User Registration and Login**
+
+  - Secure authentication using JWT (JSON Web Tokens).
+  - Role-based access control (users and administrators).
+
+- **Book Management**
+
+  - View, search, and filter books by title, author, genre, or availability.
+  - Add, edit, and delete books (admin only).
+
+- **Loan Management**
+
+  - Borrow and return books.
+  - Track current and past loans in the user dashboard.
+
+- **Notifications**
+
+  - Email notifications for loan due dates, reminders, and reservation availability.
+
+- **Admin Panel**
+
+  - Manage users and monitor library activity.
+  - View pending loans and overdue books.
 
 ---
 
-### **3. Backend com ASP.NET Core**
+## Tech Stack
 
-#### **Camadas e Funcionalidades**
-1. **Camada de Controle**:
-   - Controladores que expõem endpoints para o frontend.
-   - Exemplo:
-     - `GET /books`: Lista de livros.
-     - `POST /loans`: Solicitação de empréstimo.
-2. **Camada de Serviço**:
-   - Implementação da lógica de negócios.
-   - Métodos como "Verificar Disponibilidade de Livro" e "Registrar Empréstimo".
-3. **Camada de Dados**:
-   - Use o **Entity Framework Core** para gerenciar o acesso ao banco de dados.
-   - Configure relações entre tabelas como **Usuários**, **Livros**, e **Empréstimos**.
+### Frontend
 
-#### **Notificações por E-mail**
-1. **Configuração de SMTP**:
-   - Adicione configurações no `appsettings.json`:
-     ```json
-     "SmtpSettings": {
-       "Host": "smtp.mailtrap.io",
-       "Port": 587,
-       "Username": "seu-usuario",
-       "Password": "sua-senha"
-     }
-     ```
-2. **Serviço de Notificação**:
-   - Crie uma classe `EmailNotificationService` com métodos como:
-     - Enviar lembrete de devolução.
-     - Confirmar reserva de livro.
-3. **Eventos e Integração**:
-   - Dispare notificações ao:
-     - Registrar um empréstimo.
-     - Identificar que a devolução está próxima.
+- **Framework**: Angular
+- **UI Library**: Angular Material
+- **State Management**: NgRx
+- **Notifications**: ngx-toastr
 
-#### **Tarefas em Segundo Plano**
-1. **Hosted Service**:
-   - Crie um **Background Service** para verificar diariamente:
-     - Prazos de devolução.
-     - Status de reservas pendentes.
-   - Envie lembretes automaticamente usando o `EmailNotificationService`.
+### Backend
+
+- **Framework**: ASP.NET Core 9.0
+- **Database**: MySql
+- **ORM**: Entity Framework Core
+- **Email Service**: SMTP with MailKit or similar library
+
+### Deployment
+
+- **Frontend Hosting**: Vercel or Netlify
+- **Backend Hosting**: Azure App Service or AWS Elastic Beanstalk
+- **Database Hosting**: Azure SQL or Amazon RDS
 
 ---
 
-### **4. Banco de Dados**
+## Installation and Setup
 
-#### **Estrutura**
-- **Tabelas**:
-  - `Users`: Armazena informações dos usuários (nome, e-mail, senha).
-  - `Books`: Detalhes dos livros (título, autor, status).
-  - `Loans`: Relaciona usuários e livros emprestados (datas de empréstimo e devolução).
-- Relacione as tabelas usando chaves estrangeiras para consistência.
+### Prerequisites
 
-#### **Migrations**
-- Use o **Entity Framework Core Migrations** para criar e atualizar o banco de dados automaticamente.
+- **Node.js** and **npm** installed.
+- **.NET SDK 7.0** or higher.
+- **SQL Server** or **PostgreSQL** database instance.
+- SMTP credentials for email notifications.
+
+### Backend Setup
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-repo/community-library-backend.git
+   cd community-library-backend
+   ```
+
+2. Configure database and SMTP settings in `appsettings.json`:
+
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "YourDatabaseConnectionString"
+   },
+   "SmtpSettings": {
+     "Host": "smtp.mailtrap.io",
+     "Port": 587,
+     "Username": "your-username",
+     "Password": "your-password"
+   }
+   ```
+
+3. Apply database migrations:
+
+   ```bash
+   dotnet ef database update
+   ```
+
+4. Run the backend server:
+
+   ```bash
+   dotnet run
+   ```
+
+   The API will be available at `http://localhost:5000`.
+
+### Frontend Setup
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-repo/community-library-frontend.git
+   cd community-library-frontend
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Configure the API URL in `environment.ts`:
+
+   ```ts
+   export const environment = {
+     production: false,
+     apiUrl: 'http://localhost:5000'
+   };
+   ```
+
+4. Run the Angular development server:
+
+   ```bash
+   ng serve
+   ```
+
+   The application will be available at `http://localhost:4200`.
 
 ---
 
-### **5. Notificações por E-mail**
+## Usage
 
-#### **Fluxo de Trabalho**
-1. **Solicitação de Empréstimo**:
-   - Após registrar um empréstimo, envie um e-mail de confirmação ao usuário.
-2. **Lembretes Automáticos**:
-   - Programe verificações diárias para identificar devoluções próximas.
-   - Envie um lembrete com detalhes do prazo e instruções de devolução.
-3. **Reserva Disponível**:
-   - Quando um livro reservado for devolvido, envie um e-mail ao próximo usuário na fila.
+### User Workflow
 
-#### **Personalização de E-mails**
-- Use templates para criar mensagens amigáveis.
-- Exemplo:
-  - **Assunto**: "Lembrete: Devolução do livro"
-  - **Corpo**: "Olá [Nome], o prazo de devolução do livro '[Título]' é [Data]."
+1. **Register** an account.
+2. **Log in** to browse available books.
+3. Request a **loan** for a book.
+4. Receive **email notifications** for loan deadlines or reservation availability.
 
----
+### Admin Workflow
 
-### **6. Segurança**
-
-1. **Autenticação JWT**:
-   - Gere tokens JWT no backend para autenticar os usuários.
-   - Valide os tokens em cada requisição protegida.
-2. **Autorização**:
-   - Use políticas de autorização para limitar o acesso (ex.: apenas administradores podem acessar o painel de controle).
+1. **Log in** with admin credentials.
+2. Manage books: **add, edit, or delete**.
+3. View and manage **user accounts** and loans.
+4. Monitor pending and overdue loans.
 
 ---
 
-### **7. Testes**
+## Key Functionalities
 
-1. **Testes Unitários**:
-   - Use frameworks como **xUnit** (backend) e **Jasmine/Karma** (frontend) para testar serviços e componentes.
-2. **Testes de Integração**:
-   - Verifique a comunicação entre o frontend e o backend.
-   - Teste cenários como "solicitar empréstimo" e "enviar lembrete".
-3. **Testes Manuais**:
-   - Certifique-se de que o sistema funciona corretamente em diferentes dispositivos e navegadores.
+### Automated Email Notifications
 
----
+- **Loan Reminders**: Sent 2 days before the due date.
+- **Reservation Updates**: Notify users when a reserved book becomes available.
+- **Overdue Alerts**: Notify users and admins of overdue books.
 
-### **8. Deploy**
+### Background Tasks
 
-1. **Backend**:
-   - Use o **Azure App Service** ou **AWS Elastic Beanstalk** para hospedar a API.
-   - Configure o banco de dados em **Azure SQL** ou **Amazon RDS**.
-2. **Frontend**:
-   - Use **Vercel** ou **Netlify** para hospedar o projeto Angular.
-   - Configure o roteamento para lidar com URLs amigáveis.
+- Implemented using `IHostedService` to check and process reminders daily.
 
 ---
 
-### Resultado Final
+## Testing
 
-Com esse projeto, você terá uma aplicação completa, escalável e moderna, pronta para ser usada em uma comunidade real. Se precisar de ajuda em qualquer etapa, avise! 🚀
+- **Backend**: Unit tests with xUnit.
+- **Frontend**: Component tests with Jasmine/Karma.
+- **Integration**: Test REST API endpoints with tools like Postman or Swagger.
+
+---
+
+## Future Enhancements
+
+1. Add support for push notifications (browser and mobile).
+2. Implement a recommendation system based on user preferences.
+3. Allow users to leave reviews and ratings for books.
+4.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+---
+
+## Contributing
+
+We welcome contributions! Please fork the repository, create a new branch for your feature or bug fix, and submit a pull request.
+
+---
+
+## Contact
+
+For questions or suggestions, contact:
+
+- **Name**: Fortunato Cassuendi
+- **Email**: fortunatocassuendi@hotmail.com
+- **GitHub**: [github.com/your-profile](https://github.com/MrFortunato)
+
+Boa 
+
