@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.Interfaces;
+using CommunityLibrary.Application.Pagination;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
 {
@@ -28,24 +30,6 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<UserDetailsRequest>(entity);
         }
 
-        public async Task<IEnumerable<UserDetailsRequest>> GetAllAsync(
-            Func<UserDetailsRequest, bool>? predicate = null,
-            int pageNumber = 1,
-            int pageSize = 10,
-            CancellationToken cancellationToken = default)
-        {
-            bool domainPredicate(User user)
-            {
-                if (predicate == null)
-                {
-                    return true;
-                }
-                return predicate(_mapper.Map<UserDetailsRequest>(user));
-            }
-
-            var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
-            return entities.Select(e => _mapper.Map<UserDetailsRequest>(e));
-        }
 
         public async Task<UserDetailsRequest> GetByIdAsync(Guid id)
         {
@@ -78,6 +62,26 @@ namespace CommunityLibrary.Application.Services
             user.LastModifiedDate = DateTime.UtcNow;
             var updatedEntity = await _repository.UpdateAsync(user);
             return _mapper.Map<UserDetailsRequest>(updatedEntity);
+        }
+
+        public async Task<PaginatedResultService<UserDetailsRequest>> GetAllAsync(Expression<Func<UserDetailsRequest, bool>>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        {
+            Expression<Func<User, bool>>? domainPredicate = null;
+
+            if (predicate != null)
+            {
+                domainPredicate = ExpressionMapper.MapPredicate<UserDetailsRequest, User>(predicate);
+            }
+
+            var paginatedEntities = await _repository.GetAllAsync(
+                domainPredicate,
+                pageNumber,
+                pageSize,
+                cancellationToken
+            );
+
+            return _mapper.Map<PaginatedResultService<UserDetailsRequest>>(paginatedEntities);
+
         }
     }
 }

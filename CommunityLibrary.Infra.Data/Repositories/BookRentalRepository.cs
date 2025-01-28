@@ -1,5 +1,7 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -17,34 +19,6 @@ namespace CommunityLibrary.Infra.Data.Repositories
             await _context.SaveChangesAsync();
             return entity;  
         }
-
-        public async Task<IEnumerable<BookRental>> GetAllAsync(
-          Func<BookRental, bool>? predicate = null,
-          int pageNumber = 1,
-          int pageSize = 10,
-          CancellationToken cancellationToken = default)
-        {
-            if (pageNumber <= 0)
-                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than 0.");
-            if (pageSize <= 0)
-                throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than 0.");
-
-            var allData = await _context.BookRentals
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
-
-            var filteredData = predicate != null
-                ? allData.Where(predicate)
-                : allData;
-
-            var paginatedData = filteredData
-                .OrderBy(x => x.Id) 
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
-
-            return paginatedData;
-        }
-
 
         public async Task<BookRental> GetByIdAsync(Guid id)
         {
@@ -81,6 +55,35 @@ namespace CommunityLibrary.Infra.Data.Repositories
             await _context.SaveChangesAsync();
 
             return entity;
+        }
+
+        public async Task<PaginatedResponse<BookRental>> GetAllAsync(Expression<Func<BookRental, bool>>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        {
+            IQueryable<BookRental> bookRental =  _context.BookRentals
+                                                         .AsNoTracking();
+
+            if (predicate != null)
+            {
+                bookRental = bookRental.Where(predicate);
+            }
+            int totalItems = await bookRental.CountAsync(cancellationToken);
+
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var result = await bookRental
+                .OrderBy(u => u.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PaginatedResponse<BookRental>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
         }
     }
 }

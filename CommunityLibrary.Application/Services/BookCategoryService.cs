@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.Interfaces;
+using CommunityLibrary.Application.Pagination;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
 {
@@ -48,27 +50,26 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<BookCategoryDetailsRequest>(addedEntity);
         }
 
-        public async Task<IEnumerable<BookCategoryDetailsRequest>> GetAllAsync(
-            Func<BookCategoryDetailsRequest, bool>? predicate = null,
+        public async Task<PaginatedResultService<BookCategoryDetailsRequest>> GetAllAsync(
+            Expression<Func<BookCategoryDetailsRequest, bool>>? predicate = null,
             int pageNumber = 1,
             int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            if (pageNumber <= 0)
-                throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be greater than 0.");
-            if (pageSize <= 0)
-                throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than 0.");
-
-            bool domainPredicate(BookCategory bookCategory)
+            Expression<Func<BookCategory, bool>>? domainPredicate = null;
+            if (predicate != null)
             {
-                if(predicate == null)
-                {
-                    return true;
-                }
-                return predicate(_mapper.Map<BookCategoryDetailsRequest>(bookCategory));
+                domainPredicate = ExpressionMapper.MapPredicate<BookCategoryDetailsRequest, BookCategory>(predicate);
             }
-            var entities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
-            return entities.Select(e => _mapper.Map<BookCategoryDetailsRequest>(e)); 
+
+            var paginatedEntities = await _repository.GetAllAsync(
+                domainPredicate,
+                pageNumber,
+                pageSize,
+                cancellationToken
+            );
+
+            return  _mapper.Map<PaginatedResultService<BookCategoryDetailsRequest>>(paginatedEntities);
         }
 
 

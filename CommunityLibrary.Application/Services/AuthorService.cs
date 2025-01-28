@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.Interfaces;
+using CommunityLibrary.Application.Pagination;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
 {
@@ -29,22 +31,28 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<AuthorDetailsRequest>(author);
         }
 
-        public async Task<IEnumerable<AuthorDetailsRequest>> GetAllAsync(
-            Func<AuthorDetailsRequest, bool>? predicate,
+        public async Task<PaginatedResultService<AuthorDetailsRequest>> GetAllAsync(
+            Expression<Func<AuthorDetailsRequest, bool>>? predicate,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken)
         {
-            var authors = await _authorRepository.GetAllAsync(
-                predicate: null,
-                pageNumber: pageNumber,
-                pageSize: pageSize,
-                cancellationToken: cancellationToken
+            Expression<Func<Author, bool>>? domainPredicate = null;
+            if (predicate != null)
+            {
+                domainPredicate = ExpressionMapper.MapPredicate<AuthorDetailsRequest, Author>(predicate);
+            }
+
+
+            var paginatedEntities = await _authorRepository.GetAllAsync(
+                domainPredicate,
+                pageNumber,
+                pageSize,
+                cancellationToken
             );
 
-            var result = _mapper.Map<IEnumerable<AuthorDetailsRequest>>(authors);
 
-            return predicate == null ? result : result.Where(predicate);
+            return _mapper.Map<PaginatedResultService<AuthorDetailsRequest>>(paginatedEntities);
         }
 
         public async Task<AuthorDetailsRequest> GetByIdAsync(Guid id)

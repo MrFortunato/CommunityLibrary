@@ -1,5 +1,6 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -17,26 +18,6 @@ namespace CommunityLibrary.Infra.Data.Repositories
             _context.Users.Remove(entity);
             await _context.SaveChangesAsync();
             return entity;
-        }
-
-        public async Task<IEnumerable<User>> GetAllAsync(
-        Func<User, bool>? predicate = null,
-        int pageNumber = 1,
-        int pageSize = 10,
-        CancellationToken cancellationToken = default)
-        {
-            
-            var users = await _context.Users.AsNoTracking().ToListAsync(cancellationToken);
-
-            if (predicate != null)
-            {
-                users = users.Where(predicate).ToList();
-            }
-            return users
-                .OrderBy(u => u.Id) 
-                .Skip((pageNumber - 1) * pageSize) 
-                .Take(pageSize) 
-                .ToList(); 
         }
 
         public async Task<User> GetByIdAsync(Guid id)
@@ -69,5 +50,42 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
             return entity;
         }
+
+
+    public async Task<PaginatedResponse<User>> GetAllAsync(
+    Expression<Func<User, bool>>? predicate,
+    int pageNumber,
+    int pageSize,
+    CancellationToken cancellationToken)
+        {
+            IQueryable<User> query = _context.Users.AsNoTracking();
+
+            if (predicate != null)
+            {
+                // Para permitir o uso de Linq-to-SQL, convertendo o predicado em IQueryable
+                query = query.Where(predicate);
+
+            }
+
+            int totalItems = await query.CountAsync(cancellationToken);
+
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var result = await query
+                .OrderBy(u => u.Id) 
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PaginatedResponse<User>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
+        }
+
     }
 }

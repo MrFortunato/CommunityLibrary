@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.Interfaces;
+using CommunityLibrary.Application.Pagination;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
+using System.Linq.Expressions;
 
 
 namespace CommunityLibrary.Application.Services
@@ -30,22 +32,27 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<BookDetailsRequest>(book);
         }
 
-        public async Task<IEnumerable<BookDetailsRequest>> GetAllAsync(
-            Func<BookDetailsRequest, bool>? predicate,
+        public async Task<PaginatedResultService<BookDetailsRequest>> GetAllAsync(
+            Expression<Func<BookDetailsRequest, bool>>? predicate,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken)
         {
-            var books = await _bookRepository.GetAllAsync(
-                predicate: null,
-                pageNumber: pageNumber,
-                pageSize: pageSize,
-                cancellationToken: cancellationToken
+            Expression<Func<Book, bool>>? domainPredicate = null;
+            if (predicate != null)
+            {
+                domainPredicate = ExpressionMapper.MapPredicate<BookDetailsRequest, Book>(predicate);
+            }
+
+            var paginatedEntities = await _bookRepository.GetAllAsync(
+                domainPredicate,
+                pageNumber,
+                pageSize,
+                cancellationToken
             );
 
-            var result = _mapper.Map<IEnumerable<BookDetailsRequest>>(books);
+            return _mapper.Map<PaginatedResultService<BookDetailsRequest>>(paginatedEntities);
 
-            return predicate == null ? result : result.Where(predicate);
         }
 
         public async Task<BookDetailsRequest> GetByIdAsync(Guid id)

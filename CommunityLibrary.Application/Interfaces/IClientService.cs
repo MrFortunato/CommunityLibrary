@@ -1,4 +1,5 @@
 ﻿using CommunityLibrary.Application.Request;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Interfaces
 {
@@ -8,6 +9,6 @@ namespace CommunityLibrary.Application.Interfaces
         Task<ClientDetailsRequest> UpdateAsync(ClientUpdateRequest request);
         Task<ClientDetailsRequest> GetByIdAsync(Guid id);
         Task<ClientDetailsRequest> DeleteAsync(Guid id);
-        Task<IEnumerable<ClientDetailsRequest>> GetAllAsync(Func<ClientDetailsRequest, bool>? precate, int pagNumber, int pageSize, CancellationToken cancellationToken);
+        Task<PaginatedResultService<ClientDetailsRequest>> GetAllAsync(Expression<Func<ClientDetailsRequest, bool>>? precate, int pagNumber, int pageSize, CancellationToken cancellationToken);
     }
 }

@@ -1,10 +1,8 @@
-﻿using CommunityLibrary.Application.Interfaces;
+﻿using CommunityLibrary.Application;
+using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Api.Controllers
 {
@@ -22,14 +20,13 @@ namespace CommunityLibrary.Api.Controllers
 
         // GET: api/Book/GetAll
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<BookDetailsRequest>> GetAll([FromQuery] string? filter = null,
+        public async Task<ActionResult<PaginatedResultService<BookDetailsRequest>>> GetAll([FromQuery] string? filter = null,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            Func<BookDetailsRequest, bool>? predicate = null;
+            Expression<Func<BookDetailsRequest, bool>>? predicate = null;
 
-            // Se houver filtro, aplicamos uma função de filtragem
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 predicate = book =>
