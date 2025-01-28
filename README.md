@@ -197,11 +197,6 @@ Key features include:
 
 ---
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
 
 ## Contributing
 
@@ -213,9 +208,9 @@ We welcome contributions! Please fork the repository, create a new branch for yo
 
 For questions or suggestions, contact:
 
-- **Name**: Fortunato Cassuendi
+- **Name**: Fortunato C.
 - **Email**: fortunatocassuendi@hotmail.com
 - **GitHub**: [MrFortunato](https://github.com/MrFortunato)
 
-Boa 
+
 
