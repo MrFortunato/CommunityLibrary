@@ -1,6 +1,8 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Linq.Expressions;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -20,29 +22,6 @@ namespace CommunityLibrary.Infra.Data.Repositories
             _context.Authors.Remove(entity);
             await _context.SaveChangesAsync();
             return entity;
-        }
-
-        public async Task<IEnumerable<Author>> GetAllAsync(
-            Func<Author, bool>? predicate = null,
-            int pageNumber = 1,
-            int pageSize = 10,
-            CancellationToken cancellationToken = default)
-        {
-       
-            var authors = await _context.Authors
-                .Include(u => u.RegisteredByUser)
-                .Include(b => b.Books)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
-
-            if (predicate != null)
-            {
-                authors = authors.Where(predicate).ToList();
-            }
-            return  authors
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
         }
 
         public async Task<Author> GetByIdAsync(Guid id)
@@ -75,9 +54,35 @@ namespace CommunityLibrary.Infra.Data.Repositories
             return existingAuthor;
         }
 
-        Task<Domain.PaginatedResponse<Author>> IGenericRepository<Author>.GetAllAsync(Func<Author, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<PaginatedResponse<Author>> GetAllAsync(Expression<Func<Author, bool>>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            IQueryable<Author> authors =  _context.Authors
+                                                  .Include(u => u.RegisteredByUser)
+                                                  .Include(b => b.Books)
+                                                  .AsNoTracking();
+
+            if (predicate != null)
+            {
+                authors = authors.Where(predicate);
+            }
+            int totalItems = await authors.CountAsync(cancellationToken);
+
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var result = await authors
+                .OrderBy(u => u.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PaginatedResponse<Author>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
         }
     }
 }

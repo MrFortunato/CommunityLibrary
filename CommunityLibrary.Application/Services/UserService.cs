@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.Interfaces;
+using CommunityLibrary.Application.Pagination;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
 {
@@ -62,23 +64,24 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<UserDetailsRequest>(updatedEntity);
         }
 
-        public async Task<PaginatedResultService<UserDetailsRequest>> GetAllAsync(Func<UserDetailsRequest, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<PaginatedResultService<UserDetailsRequest>> GetAllAsync(Expression<Func<UserDetailsRequest, bool>>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            // Define uma função para aplicar o filtro no domínio
-            bool domainPredicate(User user)
+            Expression<Func<User, bool>>? domainPredicate = null;
+
+            if (predicate != null)
             {
-                if (predicate == null)
-                {
-                    return true;
-                }
-                return predicate(_mapper.Map<UserDetailsRequest>(user));
+                domainPredicate = ExpressionMapper.MapPredicate<UserDetailsRequest, User>(predicate);
             }
 
-            // Obtém todas as entidades que atendem ao filtro
-            var allEntities = await _repository.GetAllAsync(domainPredicate, pageNumber, pageSize, cancellationToken);
-            var mappedEntities = _mapper.Map<PaginatedResultService<UserDetailsRequest>>(allEntities);
+            var paginatedEntities = await _repository.GetAllAsync(
+                domainPredicate,
+                pageNumber,
+                pageSize,
+                cancellationToken
+            );
 
-            return mappedEntities;
+            return _mapper.Map<PaginatedResultService<UserDetailsRequest>>(paginatedEntities);
+
         }
     }
 }

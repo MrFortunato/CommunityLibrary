@@ -1,5 +1,6 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -50,52 +51,20 @@ namespace CommunityLibrary.Infra.Data.Repositories
             return entity;
         }
 
-        //public async Task<PaginatedResponse<User>> GetAllAsync(Func<User, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
-        //{
 
-        //    var users = await _context.Users
-        //                              .AsNoTracking()
-        //                              .ToListAsync(cancellationToken);
-
-        //    if (predicate != null)
-        //    {
-        //        users = users.Where(predicate).ToList();
-        //    }
-
-
-        //    int totalItems = users.Count;
-
-
-        //    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
-
-        //    var result =  users
-        //        .OrderBy(u => u.Id) 
-        //        .Skip((pageNumber - 1) * pageSize) 
-        //        .Take(pageSize) 
-        //        .ToList();
-
-        //    return new PaginatedResponse<User>
-        //    {
-        //        Items = result,
-        //        TotalItems = totalItems,
-        //        TotalPages = totalPages,
-        //        PageSize = pageSize,
-        //        CurrentPage = (pageNumber - 1) * pageSize
-
-        //    };
-        //}
-        public async Task<PaginatedResponse<User>> GetAllAsync(
-    Func<User, bool>? predicate,
+    public async Task<PaginatedResponse<User>> GetAllAsync(
+    Expression<Func<User, bool>>? predicate,
     int pageNumber,
     int pageSize,
     CancellationToken cancellationToken)
         {
-            var query = _context.Users.AsNoTracking();
+            IQueryable<User> query = _context.Users.AsNoTracking();
 
             if (predicate != null)
             {
                 // Para permitir o uso de Linq-to-SQL, convertendo o predicado em IQueryable
-                query = query.Where(u => predicate(u));
+                query = query.Where(predicate);
+
             }
 
             int totalItems = await query.CountAsync(cancellationToken);

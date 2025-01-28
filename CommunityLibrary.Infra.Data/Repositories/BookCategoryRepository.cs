@@ -1,5 +1,6 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Infra.Data
 {
@@ -18,36 +19,6 @@ namespace CommunityLibrary.Infra.Data
             await _context.SaveChangesAsync();
             return entity;
         }
-
-        public async Task<IEnumerable<BookCategory>> GetAllAsync(
-            Func<BookCategory, bool> predicate,
-            int pageNumber = 1,
-            int pageSize = 10,
-            CancellationToken cancellationToken = default)
-        {
-  
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate), "A filtering condition is required.");
-            }
-
-            var allData = await _context.BookCategories
-                                        .Include(c => c.RegisteredByUser)
-                                        .AsNoTracking()
-                                        .ToListAsync(cancellationToken);
-
-   
-            var filteredData = allData.Where(predicate);
-
-  
-            var paginatedData = filteredData
-                .OrderBy(u => u.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
-
-            return paginatedData;
-        }
-
 
         public async Task<BookCategory> GetByIdAsync(Guid id)
         {
@@ -85,9 +56,34 @@ namespace CommunityLibrary.Infra.Data
             return entity;
         }
 
-        Task<Domain.PaginatedResponse<BookCategory>> IGenericRepository<BookCategory>.GetAllAsync(Func<BookCategory, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<PaginatedResponse<BookCategory>> GetAllAsync(Expression<Func<BookCategory, bool>>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            IQueryable<BookCategory> bookCategory =  _context.BookCategories
+                                                             .Include(c => c.RegisteredByUser)
+                                                             .AsNoTracking();
+
+            if (predicate != null)
+            {
+                bookCategory = bookCategory.Where(predicate);
+            }
+            int totalItems = await bookCategory.CountAsync(cancellationToken);
+
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var result = await bookCategory
+                .OrderBy(u => u.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PaginatedResponse<BookCategory>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
         }
     }
 }

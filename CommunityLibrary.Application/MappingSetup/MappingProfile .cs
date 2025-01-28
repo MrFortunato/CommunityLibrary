@@ -45,9 +45,10 @@ namespace CommunityLibrary.Application.MappingSetup
                 .ForMember(c => c.Email, opt => opt.MapFrom(u => u.User.Email));
 
             CreateMap<PaginatedResponse<User>, PaginatedResultService<UserDetailsRequest>>().ReverseMap();
-
-
-
+            CreateMap<PaginatedResponse<Client>, PaginatedResultService<ClientDetailsRequest>>().ReverseMap();
+            CreateMap<PaginatedResponse<Author>, PaginatedResultService<AuthorDetailsRequest>>().ReverseMap();
+            CreateMap<PaginatedResponse<BookCategory>, PaginatedResultService<BookCategoryDetailsRequest>>().ReverseMap();
+            CreateMap<PaginatedResponse<Book>, PaginatedResultService<BookDetailsRequest>>().ReverseMap();
         }
     }
 }

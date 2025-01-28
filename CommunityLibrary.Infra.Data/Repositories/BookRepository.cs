@@ -1,5 +1,6 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -19,27 +20,40 @@ namespace CommunityLibrary.Infra.Data.Repositories
             return entity;
         }
 
-        public async Task<IEnumerable<Book>> GetAllAsync(
-           Func<Book, bool>? predicate = null,
+        public async Task<PaginatedResponse<Book>> GetAllAsync(
+           Expression<Func<Book, bool>>? predicate = null,
            int pageNumber = 1,
            int pageSize = 10,
            CancellationToken cancellationToken = default)
         {
-            var books = await _context.Books
+            IQueryable<Book> books = _context.Books
                 .Include(a => a.Author)
                 .Include(c => c.BookCategory)
                 .Include(c => c.RegisteredByUser)
-                .AsNoTracking().ToListAsync(cancellationToken);
+                .AsNoTracking();
 
             if (predicate != null)
             {
-                books = books.Where(predicate).ToList();
+                books = books.Where(predicate);
             }
-            return books
+            int totalItems = await books.CountAsync(cancellationToken);
+
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var result = await books
                 .OrderBy(u => u.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync(cancellationToken);
+
+            return new PaginatedResponse<Book>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
         }
 
         public async Task<Book> GetByIdAsync(Guid id)
@@ -78,11 +92,6 @@ namespace CommunityLibrary.Infra.Data.Repositories
             await _context.SaveChangesAsync();
 
             return entity;
-        }
-
-        Task<Domain.PaginatedResponse<Book>> IGenericRepository<Book>.GetAllAsync(Func<Book, bool>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
     }
 }

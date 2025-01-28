@@ -1,6 +1,8 @@
-﻿using CommunityLibrary.Application.Interfaces;
+﻿using CommunityLibrary.Application;
+using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Api.Controllers
 {
@@ -17,12 +19,12 @@ namespace CommunityLibrary.Api.Controllers
 
         // GET: api/Client/GetAll
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<ClientDetailsRequest>> GetAll([FromQuery] string? filter = null,
+        public async Task<ActionResult<PaginatedResultService<ClientDetailsRequest>>> GetAll([FromQuery] string? filter = null,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            Func<ClientDetailsRequest, bool>? predicate = null;
+            Expression<Func<ClientDetailsRequest, bool>>? predicate = null;
 
             if (!string.IsNullOrWhiteSpace(filter))
             {

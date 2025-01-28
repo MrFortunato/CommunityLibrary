@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.Interfaces;
+using CommunityLibrary.Application.Pagination;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
 {
@@ -29,22 +31,26 @@ namespace CommunityLibrary.Application.Services
             return _mapper.Map<ClientDetailsRequest>(client);
         }
 
-        public async Task<IEnumerable<ClientDetailsRequest>> GetAllAsync(
-            Func<ClientDetailsRequest, bool>? predicate,
+        public async Task<PaginatedResultService<ClientDetailsRequest>> GetAllAsync(
+            Expression<Func<ClientDetailsRequest, bool>>? predicate,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken)
         {
-            var clients = await _clientRepository.GetAllAsync(
-                predicate: null,
-                pageNumber: pageNumber,
-                pageSize: pageSize,
-                cancellationToken: cancellationToken
+            Expression<Func<Client, bool>>? domainPredicate = null;
+            if (predicate != null)
+            {
+                domainPredicate = ExpressionMapper.MapPredicate<ClientDetailsRequest, Client>(predicate);
+            }
+
+            var paginatedEntities = await _clientRepository.GetAllAsync(
+                domainPredicate,
+                pageNumber,
+                pageSize,
+                cancellationToken
             );
 
-            var result = _mapper.Map<IEnumerable<ClientDetailsRequest>>(clients);
-
-            return predicate == null ? result : result.Where(predicate);
+            return _mapper.Map<PaginatedResultService<ClientDetailsRequest>>(paginatedEntities);  
         }
 
         public async Task<ClientDetailsRequest> GetByIdAsync(Guid id)

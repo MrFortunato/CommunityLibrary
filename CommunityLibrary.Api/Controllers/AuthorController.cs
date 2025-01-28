@@ -1,8 +1,10 @@
-﻿using CommunityLibrary.Application.Interfaces;
+﻿using CommunityLibrary.Application;
+using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +16,6 @@ namespace CommunityLibrary.Api.Controllers
     {
         private readonly IAuthorService _authorService;
 
-        // Injeção de dependência do IAuthorService
         public AuthorController(IAuthorService authorService)
         {
             _authorService = authorService;
@@ -22,12 +23,12 @@ namespace CommunityLibrary.Api.Controllers
 
         // GET: api/Author/GetAll
         [HttpGet("GetAll")]
-        public async Task<IEnumerable<AuthorDetailsRequest>> GetAll([FromQuery] string? filter = null,
+        public async Task<ActionResult<PaginatedResultService<AuthorDetailsRequest>>> GetAll([FromQuery] string? filter = null,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            Func<AuthorDetailsRequest, bool>? predicate = null;
+            Expression<Func<AuthorDetailsRequest, bool>>? predicate = null;
 
             if (!string.IsNullOrWhiteSpace(filter))
             {

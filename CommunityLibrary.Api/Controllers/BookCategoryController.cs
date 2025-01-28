@@ -2,6 +2,7 @@
 using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace CommunityLibrary.Api.Controllers
 {
@@ -24,9 +25,8 @@ namespace CommunityLibrary.Api.Controllers
             [FromQuery] int pageSize = 10,
             CancellationToken cancellationToken = default)
         {
-            Func<BookCategoryDetailsRequest, bool>? predicate = null;
+            Expression<Func<BookCategoryDetailsRequest, bool>>? predicate = null;
 
-            // Se houver filtro, aplicamos uma função de filtragem
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 predicate = category =>
