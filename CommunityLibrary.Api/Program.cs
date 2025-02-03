@@ -21,6 +21,7 @@ namespace CommunityLibrary.Api
             });
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.ConfigureRepositoryDependencies();
+            builder.Services.AddJwtAuthentication(builder.Configuration);
 
             var app = builder.Build();
 

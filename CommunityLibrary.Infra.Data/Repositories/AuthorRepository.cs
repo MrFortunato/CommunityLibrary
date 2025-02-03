@@ -1,8 +1,6 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Linq.Expressions;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {

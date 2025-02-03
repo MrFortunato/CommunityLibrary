@@ -3,6 +3,7 @@ using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Pagination;
 using CommunityLibrary.Application.Request;
 using CommunityLibrary.Domain;
+using CommunityLibrary.Domain.Repositories;
 using System.Linq.Expressions;
 
 namespace CommunityLibrary.Application.Services
@@ -10,9 +11,9 @@ namespace CommunityLibrary.Application.Services
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
-        private readonly IGenericRepository<User> _repository;
+        private readonly IUserRepository _repository;
 
-        public UserService(IMapper mapper, IGenericRepository<User> repository)
+        public UserService(IMapper mapper, IUserRepository repository)
         {
             _mapper = mapper;
             _repository = repository;
@@ -82,6 +83,23 @@ namespace CommunityLibrary.Application.Services
 
             return _mapper.Map<PaginatedResultService<UserDetailsRequest>>(paginatedEntities);
 
+        }
+
+        public async Task<UserDetailsRequest> GetUserByEmailAsync(string email)
+        {
+            var domainEntity = await _repository.GetUserByEmailAsync(email);
+            if (domainEntity == null)
+            {
+                throw new KeyNotFoundException($"User with email {email} not found.");
+            }
+            return _mapper.Map<UserDetailsRequest>(domainEntity);
+        }
+
+        public async Task<UserAuthDetailsRequest> SignInUserAsync(UserAuthRequest request)
+        {
+            var entity = _mapper.Map<User>(request);
+            var domainEntity = await _repository.GetUserByEmailAsync(entity.Email);
+            return _mapper.Map<UserAuthDetailsRequest>(domainEntity);
         }
     }
 }
