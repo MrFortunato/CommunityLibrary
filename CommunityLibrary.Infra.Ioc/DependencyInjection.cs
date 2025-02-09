@@ -66,7 +66,7 @@ namespace CommunityLibrary.Infra.Ioc
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = true;
+                options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -78,7 +78,7 @@ namespace CommunityLibrary.Infra.Ioc
                     ValidateAudience = true,
                     ValidAudience = configuration["JwtSettings:Audience"],
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    //ClockSkew = TimeSpan.Zero
                 };
             });
 

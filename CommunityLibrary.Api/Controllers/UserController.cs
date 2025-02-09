@@ -22,7 +22,6 @@ namespace CommunityLibrary.Api.Controllers
             _userService = userRepository;
             _jwtToken = jwtToken;   
         }
-       
         [HttpGet("GetAll")]
         public async Task<ActionResult<PaginatedResultService<UserDetailsRequest>>> GetAll(
             [FromQuery] string? filter = null,
@@ -63,6 +62,7 @@ namespace CommunityLibrary.Api.Controllers
         }
 
         // POST api/<UserController>
+        [AllowAnonymous]
         [HttpPost("Create")]
         public async Task<IActionResult> Post([FromBody] UserCreateRequest request)
         {
@@ -107,6 +107,7 @@ namespace CommunityLibrary.Api.Controllers
         }
 
         // POST api/<UserController>
+        [AllowAnonymous]
         [HttpPost("Auth")]
         public async Task<IActionResult> Post([FromBody] UserAuthRequest request)
         {
