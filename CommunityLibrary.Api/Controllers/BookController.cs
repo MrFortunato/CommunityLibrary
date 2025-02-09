@@ -1,6 +1,7 @@
 ﻿using CommunityLibrary.Application;
 using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
@@ -8,6 +9,7 @@ namespace CommunityLibrary.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;

@@ -1,7 +1,6 @@
 ﻿using CommunityLibrary.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
@@ -35,6 +34,12 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
         public async Task<Client> InsertAsync(Client entity)
         {
+            var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == entity.UserId);
+            if (existingUser is null)
+            {
+                throw new KeyNotFoundException($"User with ID {entity.Id} not found.");
+            }
+            entity.User = existingUser;
             await _context.Clients.AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
@@ -42,7 +47,7 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
         public async Task<Client> UpdateAsync(Client entity)
         {
-            var existingEntity = _context.Clients.FirstAsync(x => x.Id == entity.Id);
+            var existingEntity = _context.Clients.FirstOrDefaultAsync(x => x.Id == entity.Id);
             if (existingEntity is null)
             {
                 throw new KeyNotFoundException($"Client with ID {entity.Id} not found.");

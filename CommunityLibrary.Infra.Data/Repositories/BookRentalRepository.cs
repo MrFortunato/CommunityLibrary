@@ -1,11 +1,11 @@
 ﻿using CommunityLibrary.Domain;
+using CommunityLibrary.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
-    public class BookRentalRepository : IGenericRepository<BookRental>
+    public class BookRentalRepository : IBookRentalRepository
     {
         private readonly AppDbContext _context;
 
@@ -47,7 +47,8 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
         public async Task<BookRental> UpdateAsync(BookRental entity)
         {
-            var existingEntity = await _context.BookRentals.FindAsync(entity.Id);
+            var existingEntity = await _context.BookRentals
+                                               .FirstOrDefaultAsync(x=>x.Id.Equals(entity.Id));
             if (existingEntity == null)
                 throw new KeyNotFoundException($"Rental with ID {entity.Id} not found.");
 

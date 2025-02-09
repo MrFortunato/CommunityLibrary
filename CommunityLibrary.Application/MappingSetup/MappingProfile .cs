@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CommunityLibrary.Application.Request;
+using CommunityLibrary.Application.Request.Rental;
 using CommunityLibrary.Domain;
 
 namespace CommunityLibrary.Application.MappingSetup
@@ -14,6 +15,7 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateClientMapping();
             CreateBookCategoryMapping();
             CreateBookMapping();
+            CreateBookRentalMapping();
             CreatePaginationMapping();
         }
         private void ConfigureNamingConventions()
@@ -66,7 +68,15 @@ namespace CommunityLibrary.Application.MappingSetup
                .ForMember(d => d.BookCategory, opt => opt.MapFrom(b => b.BookCategory.Description))
                .ForMember(a => a.AuthorName, opt => opt.MapFrom(b => b.Author.Name))
                .ForMember(a => a.RegisteredByUserName, opt => opt.MapFrom(b => b.RegisteredByUser.Name)); ;
-        }   
+        }
+        private void CreateBookRentalMapping()
+        {
+            CreateMap<BookRentalCreateRequest, BookRental>().ReverseMap();
+            CreateMap<BookRentalDetailsRequest, BookRental>().ReverseMap()
+               .ForMember(b => b.BookTitle, opt => opt.MapFrom(b => b.Book.Title))
+               .ForMember(u => u.RegisteredByUserName, opt => opt.MapFrom(u => u.RegisteredByUser.Name))
+               .ForMember(c => c.ClientName, opt => opt.MapFrom(c => c.Client.User.Name));
+        }
         private void CreatePaginationMapping()
         {
             CreateMap<PaginatedResponse<User>, PaginatedResultService<UserDetailsRequest>>().ReverseMap();
@@ -74,9 +84,8 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateMap<PaginatedResponse<Author>, PaginatedResultService<AuthorDetailsRequest>>().ReverseMap();
             CreateMap<PaginatedResponse<BookCategory>, PaginatedResultService<BookCategoryDetailsRequest>>().ReverseMap();
             CreateMap<PaginatedResponse<Book>, PaginatedResultService<BookDetailsRequest>>().ReverseMap();
+            CreateMap<PaginatedResponse<BookRental>, PaginatedResultService<BookRentalDetailsRequest>>().ReverseMap();
         }
-
-
-
+        
     }
 }
