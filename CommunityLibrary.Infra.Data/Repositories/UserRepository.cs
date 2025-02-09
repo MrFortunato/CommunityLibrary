@@ -1,10 +1,11 @@
 ﻿using CommunityLibrary.Domain;
+using CommunityLibrary.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace CommunityLibrary.Infra.Data.Repositories
 {
-    public class UserRepository : IGenericRepository<User>
+    public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
 
@@ -22,14 +23,9 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
         public async Task<User> GetByIdAsync(Guid id)
         {
-            var user = await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == id);
-            if (user is null)
-            {
-                throw new KeyNotFoundException($"User with ID {id} not found.");
-            }
-            return user;    
+            IQueryable<User> user =  _context.Users
+                                             .AsNoTracking();
+            return await user.FirstAsync(u => u.Id == id);     
         }
 
         public async Task<User> InsertAsync(User entity)
@@ -62,9 +58,7 @@ namespace CommunityLibrary.Infra.Data.Repositories
 
             if (predicate != null)
             {
-                // Para permitir o uso de Linq-to-SQL, convertendo o predicado em IQueryable
                 query = query.Where(predicate);
-
             }
 
             int totalItems = await query.CountAsync(cancellationToken);
@@ -85,6 +79,32 @@ namespace CommunityLibrary.Infra.Data.Repositories
                 PageSize = pageSize,
                 CurrentPage = pageNumber
             };
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            IQueryable<User> query = _context.Users.AsNoTracking();
+            query = query.Where(u => u.Email == email);
+            var user = await query.FirstOrDefaultAsync();
+            return user ?? new User();
+        }
+
+
+        public async Task<User> SignInUserAsync(User entity)
+        {
+            IQueryable<User> query = _context.Users.AsNoTracking();
+
+            if (!string.IsNullOrEmpty(entity.Name))
+            {
+                query = query.Where(u => u.Email == entity.Name);
+            }
+            if (!string.IsNullOrEmpty(entity.Password))
+            {
+                query = query.Where(u => u.Password == entity.Password);
+            }
+            var user = await query.FirstOrDefaultAsync();
+
+            return user ?? new User(); 
         }
 
     }

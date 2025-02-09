@@ -10,6 +10,8 @@ namespace CommunityLibrary.Application.Interfaces
         Task<UserDetailsRequest> UpdateAsync(UserUpdateRequest request);
         Task<UserDetailsRequest> GetByIdAsync(Guid id);
         Task<UserDetailsRequest> DeleteAsync(Guid id);
+        Task<UserDetailsRequest> GetUserByEmailAsync(string email);
+        Task<UserAuthDetailsRequest> SignInUserAsync(UserAuthRequest request);
         Task<PaginatedResultService<UserDetailsRequest>> GetAllAsync(
            Expression<Func<UserDetailsRequest, bool>>? predicate = null,
            int pageNumber = 1,

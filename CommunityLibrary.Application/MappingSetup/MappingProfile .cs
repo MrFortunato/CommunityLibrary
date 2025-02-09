@@ -14,7 +14,7 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateClientMapping();
             CreateBookCategoryMapping();
             CreateBookMapping();
-
+            CreatePaginationMapping();
         }
         private void ConfigureNamingConventions()
         {
@@ -26,6 +26,8 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateMap<UserDetailsRequest, User>().ReverseMap();
             CreateMap<UserCreateRequest, User>().ReverseMap();
             CreateMap<UserUpdateRequest, User>().ReverseMap();
+            CreateMap<UserAuthRequest, User>().ReverseMap();
+            CreateMap<UserAuthDetailsRequest, User>().ReverseMap();
         }
 
         private void CreateAuthorMapping()
@@ -73,6 +75,8 @@ namespace CommunityLibrary.Application.MappingSetup
             CreateMap<PaginatedResponse<BookCategory>, PaginatedResultService<BookCategoryDetailsRequest>>().ReverseMap();
             CreateMap<PaginatedResponse<Book>, PaginatedResultService<BookDetailsRequest>>().ReverseMap();
         }
+
+
 
     }
 }

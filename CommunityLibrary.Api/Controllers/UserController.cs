@@ -1,6 +1,8 @@
 ﻿using CommunityLibrary.Application;
 using CommunityLibrary.Application.Interfaces;
 using CommunityLibrary.Application.Request;
+using CommunityLibrary.Application.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
@@ -10,15 +12,16 @@ namespace CommunityLibrary.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userRepository)
+        private readonly IJwtTokenGenerator _jwtToken;
+        public UserController(IUserService userRepository, IJwtTokenGenerator jwtToken)
         {
             _userService = userRepository;
+            _jwtToken = jwtToken;   
         }
-
         [HttpGet("GetAll")]
         public async Task<ActionResult<PaginatedResultService<UserDetailsRequest>>> GetAll(
             [FromQuery] string? filter = null,
@@ -59,6 +62,7 @@ namespace CommunityLibrary.Api.Controllers
         }
 
         // POST api/<UserController>
+        [AllowAnonymous]
         [HttpPost("Create")]
         public async Task<IActionResult> Post([FromBody] UserCreateRequest request)
         {
@@ -66,6 +70,14 @@ namespace CommunityLibrary.Api.Controllers
             {
                 return BadRequest("Invalid user");
             }
+
+            var IsEmailExist = await _userService.GetUserByEmailAsync(request.Email);
+            if (IsEmailExist.Email.Equals(request.Email))
+            {
+                return BadRequest("Email already exists.");
+            }
+ 
+            request.Password = PasswordHasher.HashPassword(request.Password);
             await _userService.InsertAsync(request);
             return Ok(new { Message = "User created successfully.", User = request });
         }
@@ -93,5 +105,29 @@ namespace CommunityLibrary.Api.Controllers
             var deletedUser = await _userService.DeleteAsync(id);
             return Ok(new { Message = "User deleted successfully."});
         }
+
+        // POST api/<UserController>
+        [AllowAnonymous]
+        [HttpPost("Auth")]
+        public async Task<IActionResult> Post([FromBody] UserAuthRequest request)
+        {
+            try
+            {
+                var user = await _userService.SignInUserAsync(request);
+
+                if (user == null || string.IsNullOrEmpty(user.Email) || !PasswordHasher.VerifyPassword(request.Password, user.Password))
+                {
+                    return BadRequest("Username or password is invalid.");
+                }
+
+                user.Token = _jwtToken.GenerateToken(request.Email, new[] {"User"});    
+                return Ok(new { Message = "Logged in successfully.", User = user });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }
