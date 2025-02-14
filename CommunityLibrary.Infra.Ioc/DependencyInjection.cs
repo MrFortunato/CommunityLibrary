@@ -47,6 +47,7 @@ namespace CommunityLibrary.Infra.Ioc
             services.AddScoped(typeof(IClientService), typeof(ClientService));
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped(typeof(IBookCategoryService), typeof(BookCategoryService));
+            services.AddScoped(typeof(IBookRentalService), typeof(BookRentalService));
 
             services.AddAutoMapper(typeof(MappingProfile));
 

@@ -61,6 +61,10 @@ namespace CommunityLibrary.Infra.Data.Repositories
         public async Task<PaginatedResponse<BookRental>> GetAllAsync(Expression<Func<BookRental, bool>>? predicate, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             IQueryable<BookRental> bookRental =  _context.BookRentals
+                                                         .Include(c => c.Client)
+                                                         .ThenInclude(u => u.User)
+                                                         .Include(b => b.Book)
+                                                         .Include(u => u.RegisteredByUser)
                                                          .AsNoTracking();
 
             if (predicate != null)

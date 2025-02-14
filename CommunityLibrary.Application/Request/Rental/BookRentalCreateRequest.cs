@@ -6,7 +6,7 @@ namespace CommunityLibrary.Application.Request.Rental
     {
         [Required(ErrorMessage = "The return date is required.")]
         [DataType(DataType.Date, ErrorMessage = "The return date format is invalid.")]
-        public DateTime? ReturnDate { get; set; }
+        public DateTime ReturnDate { get; set; }
 
         [Required(ErrorMessage = "The returned status is required.")]
         public bool Returned { get; set; }

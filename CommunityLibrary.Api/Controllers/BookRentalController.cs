@@ -41,7 +41,7 @@ namespace CommunityLibrary.Api.Controllers
         {
             if (request == null) 
             {
-                BadRequest("Invalid Book Rental Data");
+               return BadRequest("Invalid Book Rental Data");
             }
             var bookRental = await _bookRentalService.InsertAsync(request);
             return Ok(new { Message = "BookRental created successfully.", BookRental = bookRental });
