@@ -1,0 +1,108 @@
+
+
+:root {
+  --primary-color:  #2563eb;
+  --hover-color: #2ecc71;
+}
+
+.form-container {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f3f4f6;
+  font-family: Arial, sans-serif;
+
+}
+.min-h-screen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  width: calc(100% - 25px);
+  margin-right: 10px;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  width: 100%;
+  &:hover {
+    background-color: var(--hover-color);
+  }
+}
+
+a {
+  color:  var(--primary-color);
+  &:hover {
+    color: var(--hover-color);
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}

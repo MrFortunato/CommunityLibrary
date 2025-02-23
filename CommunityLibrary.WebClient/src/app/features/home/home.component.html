@@ -1,0 +1,39 @@
+<nav class="flex justify-between items-center bg-gray-900 text-white p-4 shadow-md">
+  <!-- Área de Login e Signup -->
+
+  <div class="flex space-x-4">
+    <a href="#" class="hover:text-gray-300">Home</a>
+    <a href="#" class="hover:text-gray-300">About</a>
+    <a href="#" class="hover:text-gray-300">Contact</a>
+  </div>
+
+  <!-- Título Central -->
+  <div class="text-xl font-semibold">Community-Library</div>
+
+  <!-- Outras Opções -->
+  <div class="flex space-x-4">
+    <a [routerLink]="['/login']" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded">Login</a>
+    <a [routerLink]="['/sign-up']" class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded">Sign Up</a>
+  </div>
+</nav>
+
+
+<!-- Seção de Livros Centralizada -->
+<section class="flex justify-center items-center p-6">
+  <div  *ngFor="let book of books" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 card">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden ">
+      <img [src]="book.image" width="100" height="200" class="w-full h-40 object-cover">
+      <div class="p-4">
+        <h3 class="font-semibold text-lg">{{book.title}}</h3>
+        <p class="text-gray-600">{{book.author}}</p>
+        <div class="mt-4 flex justify-between">
+          <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">Mais Info</button>
+          <button class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">Adicionar ao Carrinho</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
