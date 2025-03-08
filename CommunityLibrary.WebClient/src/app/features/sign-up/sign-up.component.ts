@@ -1,38 +1,39 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl ,ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { RouterModule } from '@angular/router';
-import { FormControl, FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [RouterModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [
+
+
+    ReactiveFormsModule,
+    RouterModule],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.scss'
+  styleUrl:  './sign-up.component.scss'
 })
+
 export class SignUpComponent {
-  signUpForm = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(50)
-    ]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.pattern('[a-zA-Z ]*')
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(8),
-      Validators.pattern('^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$')
-    ]),
 
-    confirm: new FormControl('', [
-      Validators.required,
-      Validators.minLength(8),
-      Validators.pattern('^(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$')
-    ]),
+  signUpForm: FormGroup;
 
+  constructor(private fb: FormBuilder) {
+    this.signUpForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    });
+  }
 
-});
-submitSignUp() {
-  console.log(this.signUpForm.value);
+  submitSignUp() {
+    debugger
+    if (this.signUpForm.valid) {
+      console.log('Form Data:', this.signUpForm.value);
+    } else {
+      console.log('Form is invalid');
+    }
+  }
 }
- }

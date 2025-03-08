@@ -27,7 +27,7 @@ namespace CommunityLibrary.Api
                     BearerFormat = "JWT",
                     Scheme = "Bearer",
                     Type = SecuritySchemeType.Http
-          
+
 
                 });
 
@@ -46,6 +46,21 @@ namespace CommunityLibrary.Api
                     }
                 });
             });
+
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200") 
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                    }
+                );
+            });
+
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.ConfigureRepositoryDependencies();
             builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -61,11 +76,12 @@ namespace CommunityLibrary.Api
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication(); 
-            app.UseAuthorization();   
+            app.UseAuthentication();
+            app.UseAuthorization();
+
 
             app.MapControllers();
-     
+            app.UseCors(MyAllowSpecificOrigins);
             app.Run();
         }
 

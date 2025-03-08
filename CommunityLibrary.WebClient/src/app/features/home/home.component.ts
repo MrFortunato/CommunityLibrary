@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   imports: [RouterModule, CommonModule],
@@ -15,8 +16,8 @@ import { CommonModule } from '@angular/common';
 export class HomeComponent {
 
   books = [
-    { title: 'Livro A', author: 'Autor 1', image: 'app/assets/image/image.png' },
-    { title: 'Livro B', author: 'Autor 2', image: 'assets/image/image.png' },
+    { title: 'Livro A', author: 'Autor 1', image: 'src/assets/images/maquina-lavar.png' },
+    { title: 'Livro B', author: 'Autor 2', image: '/src/assets/images/maquina-lavar.png' },
     // Adicione mais livros conforme necessário
   ];
 
