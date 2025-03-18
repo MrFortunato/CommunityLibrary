@@ -1,23 +1,42 @@
 <!-- signup.component.html -->
 <div class="form-container items-center justify-center min-h-screen bg-gray-100">
+
   <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
     <h2 class="text-2xl font-bold text-center mb-6">Sign-Up for an Account</h2>
     <form [formGroup]="signUpForm" (ngSubmit)="submitSignUp()" class="space-y-4">
       <div>
         <label for="name" class="block mb-1">Name</label>
         <input id="name" type="text" formControlName="name" class="w-full p-3 border rounded-md" placeholder="Name">
+        <span *ngIf="signUpForm.get('name')?.invalid && signUpForm.get('name')?.touched" class="text-red-600 text-sm mt-1">
+          <p class="text-danger" *ngIf="signUpForm.get('name')?.errors?.['required']">Name is required.</p>
+          <p class="text-danger" *ngIf="signUpForm.get('name')?.errors?.['minlength']">minlength is required.</p>
+        </span>
       </div>
       <div>
         <label for="email" class="block mb-1">Email</label>
         <input id="email" type="email" formControlName="email" class="w-full p-3 border rounded-md" placeholder="Email">
+        <span *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched" class="text-red-600 text-sm mt-1">
+          <p class="text-danger" *ngIf="signUpForm.get('email')?.errors?.['required']">Email is required.</p>
+          <p class="text-danger" *ngIf="signUpForm.get('email')?.errors?.['minlength']">minlength is required.</p>
+        </span>
       </div>
       <div>
         <label for="password" class="block mb-1">Password</label>
         <input id="password" type="password" formControlName="password"  class="w-full p-3 border rounded-md" placeholder="Password">
+        <span *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched" class="text-red-600 text-sm mt-1">
+          <p class="text-danger" *ngIf="signUpForm.get('password')?.errors?.['required']">Password is required.</p>
+          <p class="text-danger" *ngIf="signUpForm.get('password')?.errors?.['minlength']">A senha deve ter pelo menos 8 caracteres.</p>
+          <p class="text-danger" *ngIf="signUpForm.get('password')?.errors?.['pattern']">Invalid password.</p>
+        </span>
       </div>
       <div>
-        <label for="confirmPassword" class="block mb-1">Confirm Password</label>
-        <input id="confirmPassword" type="password" formControlName="confirmPassword" class="w-full p-3 border rounded-md" placeholder="Confirm Password">
+        <label for="confirmedPassword" class="block mb-1">Confirm Password</label>
+        <input id="confirmedPassword" type="password" formControlName="confirmedPassword" class="w-full p-3 border rounded-md" placeholder="Confirm Password">
+        <span *ngIf="signUpForm.get('confirmedPassword')?.invalid && signUpForm.get('confirmedPassword')?.touched" class="text-red-600 text-sm mt-1">
+          <p class="text-danger" *ngIf="signUpForm.get('confirmedPassword')?.errors?.['required']">ConfirmPassword is required.</p>
+          <p class="text-danger" *ngIf="signUpForm.get('confirmedPassword')?.errors?.['minlength']">A senha deve ter pelo menos 8 caracteres.</p>
+          <p class="text-danger" *ngIf="signUpForm.get('confirmedPassword')?.errors?.['pattern']">Invalid password.</p>
+        </span>
       </div>
       <button type="submit" class="w-full p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">Sign Up</button>
       <div class="text-center mt-4">
@@ -25,4 +44,4 @@
       </div>
     </form>
   </div>
-</div>
+  <p-toast></p-toast>

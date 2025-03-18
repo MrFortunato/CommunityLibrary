@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Response } from '../../models/response';
 
 @Injectable({
 
@@ -10,7 +11,7 @@ export abstract  class BaseService<T> {
 
   protected abstract baseUrl: string; // Agora pode ser abstrato corretamente
 
-  constructor(private http: HttpClient)
+  constructor(protected http: HttpClient)
   {
 
   }
@@ -19,16 +20,16 @@ export abstract  class BaseService<T> {
     return this.http.get<T[]>(`${this.baseUrl}`);
   }
 
-  getById(id: number | string): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${id}`);
+  getById(id: number | string): Observable<Response<T>> {
+    return this.http.get<Response<T>>(`${this.baseUrl}/${id}`);
   }
 
-  create(item: T): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}`, item);
+  create(item: T): Observable<Response<T>> {
+    return this.http.post<Response<T>>(`${this.baseUrl}`, item);
   }
 
-  update(id: number | string, item: T): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}/${id}`, item);
+  update(id: number | string, item: T): Observable<Response<T>> {
+    return this.http.put<Response<T>>(`${this.baseUrl}/${id}`, item);
   }
 
   delete(id: number | string): Observable<void> {

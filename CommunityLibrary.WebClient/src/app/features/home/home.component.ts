@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   imports: [RouterModule, CommonModule],
-  encapsulation: ViewEncapsulation.ShadowDom// Ignora os estilos globais
+  encapsulation: ViewEncapsulation.ShadowDom
 
 })
 

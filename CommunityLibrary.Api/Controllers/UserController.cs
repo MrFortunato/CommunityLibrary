@@ -121,7 +121,7 @@ namespace CommunityLibrary.Api.Controllers
                 }
 
                 user.Token = _jwtToken.GenerateToken(request.Email, new[] {"User"});    
-                return Ok(new { Message = "Logged in successfully.", User = user });
+                return Ok(new { Success = true, Message = "Logged in successfully.", User = user });
             }
             catch (Exception ex)
             {
